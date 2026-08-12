@@ -1,0 +1,4392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Schedule & Module Planner</title>
+  <!-- Google Fonts for Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Modern CSS Design System - Course Schedule Planner */
+
+    :root {
+      /* Dynamic Grid & Widget Sizing Variables */
+      --term-col-width: 170px;
+      --sidebar-col-width: 220px;
+      --mod-font-size: 0.825rem;
+      --mod-padding-v: 8px;
+      --mod-padding-h: 10px;
+      --mod-margin-bottom: 6px;
+
+      /* Color Palette - Light Mode */
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-table-header: #f1f5f9;
+      --bg-sidebar: #f8fafc;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --border-dark: #94a3b8;
+
+      /* Year Accent Headers */
+      --year1-bg: #e0f2fe;
+      --year1-border: #0284c7;
+      --year1-text: #0369a1;
+
+      --year2-bg: #dbeafe;
+      --year2-border: #2563eb;
+      --year2-text: #1d4ed8;
+
+      --year3-bg: #dcfce7;
+      --year3-border: #16a34a;
+      --year3-text: #15803d;
+
+      /* Module Type Colors */
+      --type-a-color: #dc2626;
+      --type-a-bg: #fef2f2;
+      --type-a-border: #fca5a5;
+
+      --type-b-color: #2563eb;
+      --type-b-bg: #eff6ff;
+      --type-b-border: #93c5fd;
+
+      --cdc-color: #b45309;
+      --cdc-bg: #fef3c7;
+      --cdc-border: #fde047;
+
+      --elective-color: #0d9488;
+      --elective-bg: #ccfbf1;
+      --elective-border: #5eead4;
+
+      --lifeskills-color: #6d28d9;
+      --lifeskills-bg: #f3e8ff;
+      --lifeskills-border: #c084fc;
+
+      --sports-color: #047857;
+      --sports-bg: #d1fae5;
+      --sports-border: #6ee7b7;
+
+      --internship-3m-color: #ea580c;
+      --internship-3m-bg: #fff7ed;
+      --internship-3m-border: #fdba74;
+
+      --internship-6m-color: #c026d3;
+      --internship-6m-bg: #fdf4ff;
+      --internship-6m-border: #f0abfc;
+
+      /* General UI */
+      --primary-accent: #2563eb;
+      --primary-hover: #1d4ed8;
+      --danger-color: #ef4444;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    /* Dark Mode Theme */
+    body.theme-dark {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-table-header: #1e293b;
+      --bg-sidebar: #0f172a;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --border-dark: #475569;
+
+      --year1-bg: #0c4a6e;
+      --year1-text: #7dd3fc;
+      --year2-bg: #1e3a8a;
+      --year2-text: #93c5fd;
+      --year3-bg: #14532d;
+      --year3-text: #86efac;
+
+      --type-a-color: #f87171;
+      --type-a-bg: #450a0a;
+      --type-a-border: #7f1d1d;
+
+      --type-b-color: #60a5fa;
+      --type-b-bg: #172554;
+      --type-b-border: #1e3a8a;
+
+      --cdc-color: #fde047;
+      --cdc-bg: #451a03;
+      --cdc-border: #78350f;
+
+      --elective-color: #2dd4bf;
+      --elective-bg: #042f2e;
+      --elective-border: #115e59;
+
+      --lifeskills-color: #c084fc;
+      --lifeskills-bg: #3b0764;
+      --lifeskills-border: #581c87;
+
+      --sports-color: #34d399;
+      --sports-bg: #064e3b;
+      --sports-border: #065f46;
+
+      --internship-3m-color: #fb923c;
+      --internship-3m-bg: #431407;
+      --internship-3m-border: #9a3412;
+
+      --internship-6m-color: #e879f9;
+      --internship-6m-bg: #4a044e;
+      --internship-6m-border: #86198f;
+    }
+
+    /* Grid Visibility Styles */
+    body.grid-high-contrast {
+      --border-color: #64748b;
+      --border-dark: #334155;
+    }
+
+    body.grid-subtle {
+      --border-color: #e2e8f0;
+      --border-dark: #cbd5e1;
+    }
+
+    /* Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      line-height: 1.5;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    /* App Header */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--bg-card);
+      padding: 14px 20px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+    }
+
+    .app-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .app-subtitle {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border-color: var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--bg-table-header);
+      color: var(--text-primary);
+    }
+
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+
+    .btn-icon {
+      padding: 8px;
+      border-radius: var(--radius-md);
+      background: var(--bg-table-header);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    /* Metadata Bar */
+    .metadata-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background-color: var(--bg-card);
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .active-course-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    .active-course-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .meta-fields-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .meta-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+    }
+
+    .meta-field label {
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .meta-field input {
+      padding: 4px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+
+    .meta-legend {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.775rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-badge {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .type-a-badge {
+      background-color: var(--type-a-color);
+    }
+
+    .type-b-badge {
+      background-color: var(--type-b-color);
+    }
+
+    .duration-3m {
+      background-color: #64748b;
+    }
+
+    .duration-6m {
+      background-color: #8b5cf6;
+    }
+
+    /* Table Matrix Layout - Dynamic Sizing & Fixed Layout */
+    .table-scroll-wrapper {
+      overflow-x: auto;
+      overflow-y: visible;
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      cursor: grab;
+    }
+
+    .table-scroll-wrapper.panning,
+    .table-scroll-wrapper.panning * {
+      cursor: grabbing !important;
+    }
+
+    .schedule-matrix {
+      width: calc(var(--sidebar-col-width) + (var(--max-terms, 12) * var(--term-col-width)));
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: calc(var(--sidebar-col-width) + (var(--max-terms, 12) * var(--term-col-width)));
+      table-layout: fixed;
+    }
+
+    .schedule-matrix th,
+    .schedule-matrix td {
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px;
+      text-align: center;
+      font-size: 0.825rem;
+      vertical-align: top;
+    }
+
+    /* First Column (Exam Pattern / Meta Sidebar) - Independent Sizing Control */
+    .sidebar-col-header {
+      width: var(--sidebar-col-width);
+      min-width: var(--sidebar-col-width);
+      position: sticky;
+      left: 0;
+      z-index: 30;
+      background-color: var(--bg-table-header);
+      font-weight: 700;
+      color: var(--text-primary);
+      vertical-align: middle !important;
+      box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar-label {
+      width: var(--sidebar-col-width);
+      min-width: var(--sidebar-col-width);
+      position: sticky;
+      left: 0;
+      z-index: 25;
+      background-color: var(--bg-sidebar);
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-align: left !important;
+      padding-left: 12px !important;
+      vertical-align: middle !important;
+      box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Year & Term Headers - Dynamic Term Column Width */
+    .year-header {
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 8px 0;
+      border-bottom: 2px solid var(--border-dark);
+    }
+
+    .year-1 {
+      background-color: var(--year1-bg);
+      color: var(--year1-text);
+    }
+
+    .year-2 {
+      background-color: var(--year2-bg);
+      color: var(--year2-text);
+    }
+
+    .year-3 {
+      background-color: var(--year3-bg);
+      color: var(--year3-text);
+    }
+
+    .term-header {
+      background-color: var(--bg-table-header);
+      font-weight: 600;
+      width: var(--term-col-width);
+      min-width: var(--term-col-width);
+    }
+
+    .sub-term-info {
+      font-size: 0.725rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-meta-row td {
+      background-color: var(--bg-table-header);
+      font-weight: 500;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* Module Drop Slots & Cells - 12 Term Columns Preserved Always */
+    .term-slot {
+      position: relative;
+      min-height: 95px;
+      width: var(--term-col-width);
+      min-width: var(--term-col-width);
+      background-color: var(--bg-card);
+      transition: background-color 0.2s ease;
+      vertical-align: top !important;
+      overflow: visible !important;
+      /* Crucial: allows child 6m widget to extend beyond cell boundaries */
+      z-index: 1;
+    }
+
+    /* Elevate slot containing 6-month module above sibling cells */
+    .term-slot.has-span-6m {
+      z-index: 10 !important;
+    }
+
+    /* Slot spanned underneath a 6-month module has transparent background so overflowing 6m widget is fully visible */
+    .term-slot.spanned-underneath {
+      background-color: transparent !important;
+    }
+
+    .term-slot.drag-over {
+      background-color: rgba(37, 99, 235, 0.1) !important;
+      outline: 2px dashed var(--primary-accent);
+      outline-offset: -2px;
+    }
+
+    /* Module Widgets - Dynamic Padding, Gap, & Text Size */
+    .module-widget {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: var(--mod-padding-v) var(--mod-padding-h);
+      margin-bottom: var(--mod-margin-bottom);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      cursor: grab;
+      position: relative;
+      user-select: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .module-widget:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      z-index: 20 !important;
+    }
+
+    .module-widget:active {
+      cursor: grabbing;
+    }
+
+    .module-widget.dragging {
+      opacity: 0.4;
+    }
+
+    /* Spanning 6-month widget across 2 term columns - aligned precisely with Term 2 module right edge */
+    .module-widget.span-6m {
+      width: calc((2 * var(--term-col-width)) - 17px) !important;
+      position: relative;
+      z-index: 15 !important;
+      border-left-width: 5px;
+      box-shadow: var(--shadow-sm);
+      background: linear-gradient(90deg, var(--bg-card) 0%, rgba(245, 243, 255, 0.95) 100%);
+    }
+
+    body.theme-dark .module-widget.span-6m {
+      background: linear-gradient(90deg, var(--bg-card) 0%, rgba(30, 27, 75, 0.95) 100%);
+    }
+
+    /* Category Specific Widget Styles */
+    .module-widget[data-type="Type A"] {
+      border-left: 4px solid var(--type-a-color);
+      color: var(--type-a-color);
+      background-color: var(--type-a-bg);
+    }
+
+    .module-widget[data-type="Type B"] {
+      border-left: 4px solid var(--type-b-color);
+      color: var(--type-b-color);
+      background-color: var(--type-b-bg);
+    }
+
+    .module-widget[data-category="CDC"] {
+      border-left: 4px solid var(--cdc-color);
+      color: var(--cdc-color);
+      background-color: var(--cdc-bg);
+    }
+
+    .module-widget[data-category="Elective"] {
+      border-left: 4px solid var(--elective-color);
+      color: var(--elective-color);
+      background-color: var(--elective-bg);
+    }
+
+    .module-widget[data-category="Life-skills"] {
+      border-left: 4px solid var(--lifeskills-color);
+      color: var(--lifeskills-color);
+      background-color: var(--lifeskills-bg);
+    }
+
+    .module-widget[data-category="Sports"] {
+      border-left: 4px solid var(--sports-color);
+      color: var(--sports-color);
+      background-color: var(--sports-bg);
+    }
+
+    .module-widget[data-category="Internship-3M"] {
+      border-left: 4px solid var(--internship-3m-color);
+      color: var(--internship-3m-color);
+      background-color: var(--internship-3m-bg);
+    }
+
+    .module-widget[data-category="Internship-6M"] {
+      border-left: 5px solid var(--internship-6m-color);
+      color: var(--internship-6m-color);
+      background-color: var(--internship-6m-bg);
+    }
+
+    /* Module Widget Content Elements */
+    .mod-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mod-title {
+      font-weight: 700;
+      font-size: var(--mod-font-size);
+      line-height: 1.25;
+      color: inherit;
+    }
+
+    .mod-code {
+      font-size: calc(var(--mod-font-size) - 0.1rem);
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    .mod-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .tag-badge {
+      font-size: calc(var(--mod-font-size) - 0.15rem);
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0, 0.06);
+    }
+
+    body.theme-dark .tag-badge {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .duration-tag {
+      background-color: rgba(139, 92, 246, 0.2) !important;
+      color: #7c3aed;
+    }
+
+    body.theme-dark .duration-tag {
+      color: #c084fc;
+    }
+
+    .hours-tag {
+      background-color: rgba(37, 99, 235, 0.12) !important;
+      color: #1d4ed8;
+    }
+
+    body.theme-dark .hours-tag {
+      color: #93c5fd;
+    }
+
+    .credits-tag {
+      background-color: rgba(16, 185, 129, 0.18) !important;
+      color: #047857;
+    }
+
+    body.theme-dark .credits-tag {
+      color: #34d399;
+    }
+
+    /* Edit action icon on widget */
+    .mod-edit-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      opacity: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      padding: 2px 4px;
+      font-size: 0.7rem;
+      transition: opacity 0.2s;
+    }
+
+    .module-widget:hover .mod-edit-btn {
+      opacity: 1;
+    }
+
+    /* Summary Rows */
+    .summary-row td {
+      background-color: var(--bg-table-header);
+      font-weight: 700;
+      color: var(--text-primary);
+      vertical-align: middle;
+    }
+
+    .total-hours-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background-color: #e2e8f0;
+      color: #334155;
+    }
+
+    body.theme-dark .total-hours-badge {
+      background-color: #334155;
+      color: #f8fafc;
+    }
+
+    .workload-high {
+      background-color: #fef2f2 !important;
+      color: #dc2626 !important;
+    }
+
+    /* Hours Breakdown Cell Styling (Trade module, LFS + SW, Total) */
+    .hrs-breakdown-cell {
+      padding: 6px 4px !important;
+      vertical-align: middle !important;
+      font-size: 0.725rem;
+      line-height: 1.35;
+    }
+
+    .hrs-breakdown-card {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .hrs-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 110px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-size: 0.725rem;
+    }
+
+    .hrs-val {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .hrs-total-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 110px;
+      margin-top: 3px;
+      padding-top: 3px;
+      border-top: 1px dashed var(--border-color);
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .hrs-total-label {
+      color: var(--text-primary);
+    }
+
+    /* Campus Classes Editable Row */
+    .campus-class-cell {
+      padding: 6px 4px !important;
+      vertical-align: middle !important;
+    }
+
+    .campus-class-form {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+
+    .campus-input-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 95px;
+      gap: 4px;
+    }
+
+    .campus-input-row label {
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.725rem;
+    }
+
+    .campus-input {
+      width: 44px;
+      padding: 1px 4px;
+      font-size: 0.775rem;
+      font-weight: 600;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .campus-input:focus {
+      outline: none;
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+      background-color: var(--bg-card);
+    }
+
+    .campus-total-line {
+      margin-top: 3px;
+      padding-top: 2px;
+      border-top: 1px dashed var(--border-color);
+      font-size: 0.775rem;
+      color: var(--text-primary);
+      width: 100%;
+      max-width: 95px;
+      text-align: center;
+    }
+
+    /* Term Remarks Editable Multiline Row */
+    .term-remark-cell {
+      padding: 4px 3px !important;
+      vertical-align: top !important;
+    }
+
+    .term-remark-textarea {
+      width: 95%;
+      min-height: 28px;
+      height: auto;
+      padding: 4px;
+      font-size: 0.725rem;
+      line-height: 1.3;
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      text-align: center;
+      resize: none;
+      overflow: hidden;
+      font-family: inherit;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .term-remark-textarea:hover {
+      border-style: solid;
+      border-color: var(--primary-accent);
+    }
+
+    .term-remark-textarea:focus {
+      outline: none;
+      border-style: solid;
+      border-color: var(--primary-accent);
+      background-color: var(--bg-card);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+
+    /* Multi-Course Workspace Tabs Navigation Bar */
+    .course-tabs-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 12px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .course-tabs-list {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding: 2px 0;
+      scrollbar-width: thin;
+    }
+
+    .course-tab-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      font-size: 0.825rem;
+      font-weight: 600;
+      border-radius: 20px;
+      background-color: var(--bg-main);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .course-tab-item:hover {
+      filter: brightness(0.96);
+    }
+
+    /* Pastel & Light Color Palette for Course Tabs (8-color repeating loop) */
+    .course-tab-item.tab-color-indigo {
+      background-color: #e0e7ff;
+      border-color: #c7d2fe;
+      color: #3730a3;
+    }
+
+    .course-tab-item.tab-color-indigo.active {
+      background-color: #4f46e5;
+      border-color: #4338ca;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(79, 70, 229, 0.35);
+    }
+
+    .course-tab-item.tab-color-emerald {
+      background-color: #d1fae5;
+      border-color: #a7f3d0;
+      color: #065f46;
+    }
+
+    .course-tab-item.tab-color-emerald.active {
+      background-color: #059669;
+      border-color: #047857;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(5, 150, 105, 0.35);
+    }
+
+    .course-tab-item.tab-color-amber {
+      background-color: #fef3c7;
+      border-color: #fde68a;
+      color: #92400e;
+    }
+
+    .course-tab-item.tab-color-amber.active {
+      background-color: #d97706;
+      border-color: #b45309;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.35);
+    }
+
+    .course-tab-item.tab-color-rose {
+      background-color: #ffe4e6;
+      border-color: #fecdd3;
+      color: #9f1239;
+    }
+
+    .course-tab-item.tab-color-rose.active {
+      background-color: #e11d48;
+      border-color: #be123c;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(225, 29, 72, 0.35);
+    }
+
+    .course-tab-item.tab-color-purple {
+      background-color: #f3e8ff;
+      border-color: #e9d5ff;
+      color: #6b21a8;
+    }
+
+    .course-tab-item.tab-color-purple.active {
+      background-color: #9333ea;
+      border-color: #7e22ce;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(147, 51, 234, 0.35);
+    }
+
+    .course-tab-item.tab-color-teal {
+      background-color: #cffafe;
+      border-color: #a5f3fc;
+      color: #155e75;
+    }
+
+    .course-tab-item.tab-color-teal.active {
+      background-color: #0891b2;
+      border-color: #0e7490;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(8, 145, 178, 0.35);
+    }
+
+    .course-tab-item.tab-color-orange {
+      background-color: #ffedd5;
+      border-color: #fed7aa;
+      color: #9a3412;
+    }
+
+    .course-tab-item.tab-color-orange.active {
+      background-color: #ea580c;
+      border-color: #c2410c;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(234, 88, 12, 0.35);
+    }
+
+    .course-tab-item.tab-color-violet {
+      background-color: #ede9fe;
+      border-color: #ddd6fe;
+      color: #4c1d95;
+    }
+
+    .course-tab-item.tab-color-violet.active {
+      background-color: #7c3aed;
+      border-color: #6d28d9;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(124, 58, 237, 0.35);
+    }
+
+    /* Dark Mode Adaptive Pastel Colors */
+    body.theme-dark .course-tab-item.tab-color-indigo {
+      background-color: rgba(79, 70, 229, 0.2);
+      border-color: rgba(99, 102, 241, 0.4);
+      color: #c7d2fe;
+    }
+
+    body.theme-dark .course-tab-item.tab-color-emerald {
+      background-color: rgba(5, 150, 105, 0.2);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #a7f3d0;
+    }
+
+    body.theme-dark .course-tab-item.tab-color-amber {
+      background-color: rgba(217, 119, 6, 0.2);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fde68a;
+    }
+
+    body.theme-dark .course-tab-item.tab-color-rose {
+      background-color: rgba(225, 29, 72, 0.2);
+      border-color: rgba(244, 63, 94, 0.4);
+      color: #fecdd3;
+    }
+
+    body.theme-dark .course-tab-item.tab-color-purple {
+      background-color: rgba(147, 51, 234, 0.2);
+      border-color: rgba(168, 85, 247, 0.4);
+      color: #e9d5ff;
+    }
+
+    body.theme-dark .course-tab-item.tab-color-teal {
+      background-color: rgba(8, 145, 178, 0.2);
+      border-color: rgba(6, 182, 212, 0.4);
+      color: #a5f3fc;
+    }
+
+    body.theme-dark .course-tab-item.tab-color-orange {
+      background-color: rgba(234, 88, 12, 0.2);
+      border-color: rgba(249, 115, 22, 0.4);
+      color: #fed7aa;
+    }
+
+    body.theme-dark .course-tab-item.tab-color-violet {
+      background-color: rgba(124, 58, 237, 0.2);
+      border-color: rgba(139, 92, 246, 0.4);
+      color: #ddd6fe;
+    }
+
+    .tab-title-text {
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tab-rename-input {
+      font-size: 0.825rem;
+      font-weight: 600;
+      padding: 2px 6px;
+      border: 1px solid #ffffff;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.95);
+      color: #0f172a;
+      width: 160px;
+      outline: none;
+    }
+
+    .tab-close-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      font-size: 11px;
+      opacity: 0.75;
+      transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+    }
+
+    .tab-close-btn:hover {
+      opacity: 1;
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .course-tab-item:not(.active) .tab-close-btn:hover {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .add-tab-btn {
+      flex-shrink: 0;
+      font-size: 0.8rem;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    /* Certification Requirements & Compliance Audit Section - Vertically Cascaded */
+    .cert-audit-section {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .cert-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .cert-section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-primary);
+    }
+
+    .cert-title-icon {
+      font-size: 1.25rem;
+    }
+
+    .cert-status-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .cert-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cert-badge.badge-fulfilled {
+      background-color: #f0fdf4;
+      color: #15803d;
+      border-color: #86efac;
+    }
+
+    body.theme-dark .cert-badge.badge-fulfilled {
+      background-color: #14532d;
+      color: #86efac;
+      border-color: #16a34a;
+    }
+
+    .cert-badge.badge-deficit {
+      background-color: #fef2f2;
+      color: #b91c1c;
+      border-color: #fca5a5;
+    }
+
+    body.theme-dark .cert-badge.badge-deficit {
+      background-color: #450a0a;
+      color: #f87171;
+      border-color: #7f1d1d;
+    }
+
+    .cert-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .cert-audit-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1100px;
+      font-size: 0.875rem;
+    }
+
+    .cert-audit-table th,
+    .cert-audit-table td {
+      border: 1px solid var(--border-color);
+      padding: 10px 12px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .cert-th-group-row th {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .cert-col-category {
+      width: 280px;
+      text-align: left !important;
+      background-color: var(--bg-table-header);
+      color: var(--text-primary);
+    }
+
+    .level-y1 {
+      background-color: var(--year1-bg);
+      color: var(--year1-text);
+    }
+
+    .level-y2 {
+      background-color: var(--year2-bg);
+      color: var(--year2-text);
+    }
+
+    .level-y3 {
+      background-color: var(--year3-bg);
+      color: var(--year3-text);
+    }
+
+    .cert-subname {
+      font-size: 0.75rem;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    .cert-name-input {
+      width: 92%;
+      max-width: 290px;
+      margin-top: 4px;
+      padding: 3px 8px;
+      font-size: 0.775rem;
+      font-weight: 600;
+      text-align: center;
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+    }
+
+    .cert-name-input:hover {
+      border-style: solid;
+      border-color: var(--primary-accent);
+    }
+
+    .cert-name-input:focus {
+      outline: none;
+      border-style: solid;
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+      background-color: var(--bg-card);
+    }
+
+    .cert-th-sub-row th {
+      background-color: var(--bg-table-header);
+      font-size: 0.775rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .cert-cat-name {
+      font-weight: 600;
+      text-align: left !important;
+      background-color: var(--bg-sidebar);
+    }
+
+    .req-cr-input {
+      width: 55px;
+      padding: 4px 6px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .req-cr-input:focus {
+      outline: 2px solid var(--primary-accent);
+    }
+
+    .req-intern-select {
+      padding: 4px 6px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.825rem;
+    }
+
+    .req-intern-select:focus {
+      outline: 2px solid var(--primary-accent);
+    }
+
+    .cert-prereq-row td {
+      background-color: rgba(234, 88, 12, 0.05);
+    }
+
+    body.theme-dark .cert-prereq-row td {
+      background-color: rgba(234, 88, 12, 0.15);
+    }
+
+    .status-light-fulfilled {
+      color: #16a34a;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background-color: #f0fdf4;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    body.theme-dark .status-light-fulfilled {
+      background-color: #14532d;
+      color: #86efac;
+    }
+
+    .status-light-deficit {
+      color: #dc2626;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background-color: #fef2f2;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    body.theme-dark .status-light-deficit {
+      background-color: #450a0a;
+      color: #f87171;
+    }
+
+    .cert-total-row td {
+      background-color: var(--bg-table-header);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* Settings Form Controls */
+    .setting-label-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .setting-val-badge {
+      font-size: 0.825rem;
+      font-weight: 700;
+      color: var(--primary-accent);
+      background-color: rgba(37, 99, 235, 0.1);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary-accent);
+      cursor: pointer;
+    }
+
+    /* Modal Dialog */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.hidden {
+      display: none;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .modal-card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 620px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-card.modal-large {
+      max-width: 700px;
+    }
+
+    @keyframes modalSlide {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-table-header);
+    }
+
+    .modal-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .form-section-title {
+      font-size: 0.825rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-top: 4px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 14px;
+    }
+
+    .flex-1 {
+      flex: 1;
+    }
+
+    .flex-2 {
+      flex: 2;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    .input-readonly {
+      background-color: var(--bg-table-header) !important;
+      font-weight: 700;
+      color: var(--primary-accent) !important;
+    }
+
+    .field-hint {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+
+<body class="grid-standard">
+
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="app-title">Course Schedule & Module Planner</h1>
+          <p class="app-subtitle">Curriculum Design • 3 Years (6 Semesters / 12 Terms)</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Controls & Actions -->
+        <button id="exportJsonBtn" class="btn btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Export JSON
+        </button>
+
+        <label id="importJsonBtn" class="btn btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Import JSON
+          <input type="file" id="importJsonInput" accept=".json" style="display: none;">
+        </label>
+
+        <button id="themeToggleBtn" class="btn-icon" title="Toggle Dark/Light Mode">
+          <span class="theme-icon">🌙</span>
+        </button>
+
+        <button id="aboutBtn" class="btn btn-outline" title="About Course Schedule & Module Planner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          About
+        </button>
+      </div>
+    </header>
+
+    <!-- Multi-Course Workspace Tabs Navigation Bar -->
+    <div class="course-tabs-bar">
+      <div class="course-tabs-list" id="courseTabsList">
+        <!-- Rendered dynamically by JS -->
+      </div>
+      <button id="addCourseTabBtn" class="btn btn-sm btn-outline add-tab-btn" title="Add New Course Plan Tab">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        New Course Tab
+      </button>
+    </div>
+
+    <!-- Active Course Actions & Metadata Container (Just Above Schedule Table) -->
+    <div class="metadata-bar">
+      <div class="active-course-toolbar">
+        <div class="active-course-actions">
+          <button id="addModuleBtn" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add Module Widget
+          </button>
+
+          <button id="plannerSettingsBtn" class="btn btn-outline" title="Planner Display & Grid Sizing Settings">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+              </path>
+            </svg>
+            Settings
+          </button>
+
+          <button id="resetScheduleBtn" class="btn btn-outline" title="Reset Active Tab to Default Preset">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+            Reset Preset
+          </button>
+        </div>
+
+        <div class="meta-legend">
+          <div class="legend-item"><span class="legend-badge type-a-badge"></span> Type A (Final Exam)</div>
+          <div class="legend-item"><span class="legend-badge type-b-badge"></span> Type B (In-Course Assessment)</div>
+          <div class="legend-item"><span class="legend-badge duration-3m"></span> 3 Months (10 Wks)</div>
+          <div class="legend-item"><span class="legend-badge duration-6m"></span> 6 Months (20 Wks - Odd Term Start)
+          </div>
+        </div>
+      </div>
+
+      <div class="meta-fields-row">
+        <div class="meta-field">
+          <label for="effectDateInput">Effective Date:</label>
+          <input type="text" id="effectDateInput" value="With effect from Jan 2027">
+        </div>
+
+        <div class="meta-field">
+          <label for="courseTitleInput">Course Title:</label>
+          <input type="text" id="courseTitleInput" value="Higher Nitec in Software Development"
+            style="min-width: 280px;">
+        </div>
+
+        <div class="meta-field">
+          <label for="collegeInput">College / Campus:</label>
+          <input type="text" id="collegeInput" value="College West">
+        </div>
+
+        <div class="meta-field">
+          <label for="startMonthSelect">Term 1 Start Date:</label>
+          <select id="startMonthSelect"
+            style="padding: 4px 6px; font-weight: 600; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-primary);">
+            <option value="0" selected>Jan</option>
+            <option value="1">Feb</option>
+            <option value="2">Mar</option>
+            <option value="3">Apr</option>
+            <option value="4">May</option>
+            <option value="5">Jun</option>
+            <option value="6">Jul</option>
+            <option value="7">Aug</option>
+            <option value="8">Sep</option>
+            <option value="9">Oct</option>
+            <option value="10">Nov</option>
+            <option value="11">Dec</option>
+          </select>
+          <input type="number" id="startYearInput" value="2027" min="2000" max="2099"
+            style="width: 70px; padding: 4px 6px; font-weight: 600; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-primary);">
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Schedule Table Matrix (Scrollable Container) -->
+    <div class="table-scroll-wrapper">
+      <table class="schedule-matrix">
+        <thead>
+          <!-- Year Headers Row -->
+          <tr>
+            <th rowspan="2" class="sidebar-col-header">Exam Pattern / Meta Sidebar</th>
+            <th colspan="4" class="year-header year-1">Year 1 (Foundation modules)</th>
+            <th colspan="4" class="year-header year-2">Year 2 (Core modules)</th>
+            <th colspan="4" class="year-header year-3">Year 3 (Specialisation modules)</th>
+          </tr>
+          <!-- Term Headers Row (Dynamically Populated based on Term 1 Start Month & Year) -->
+          <tr id="termHeadersRow">
+            <th class="term-header">Term 1, Jan 2027<br><span class="sub-term-info">10 Wks • Sem 1</span></th>
+            <th class="term-header">Term 2, Apr 2027<br><span class="sub-term-info">10 Wks • Sem 1</span></th>
+            <th class="term-header">Term 3, Jul 2027<br><span class="sub-term-info">10 Wks • Sem 2</span></th>
+            <th class="term-header">Term 4, Oct 2027<br><span class="sub-term-info">10 Wks • Sem 2</span></th>
+
+            <th class="term-header">Term 5, Jan 2028<br><span class="sub-term-info">10 Wks • Sem 3</span></th>
+            <th class="term-header">Term 6, Apr 2028<br><span class="sub-term-info">10 Wks • Sem 3</span></th>
+            <th class="term-header">Term 7, Jul 2028<br><span class="sub-term-info">10 Wks • Sem 4</span></th>
+            <th class="term-header">Term 8, Oct 2028<br><span class="sub-term-info">10 Wks • Sem 4</span></th>
+
+            <th class="term-header">Term 9, Jan 2029<br><span class="sub-term-info">10 Wks • Sem 5</span></th>
+            <th class="term-header">Term 10, Apr 2029<br><span class="sub-term-info">10 Wks • Sem 5</span></th>
+            <th class="term-header">Term 11, Jul 2029<br><span class="sub-term-info">10 Wks • Sem 6</span></th>
+            <th class="term-header">Term 12, Oct 2029<br><span class="sub-term-info">10 Wks • Sem 6</span></th>
+          </tr>
+          <!-- Meta No of Classes Row -->
+          <tr class="header-meta-row">
+            <td class="sidebar-label">No. of Classes</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+        </thead>
+        <tbody id="scheduleBody">
+          <!-- Dynamically populated matrix rows (Type A, Type B, CDC, Electives, Life-skills, Sports) -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Certification Requirements & Compliance Audit Table Section - Vertically Cascaded -->
+    <section class="cert-audit-section">
+      <div class="cert-section-header">
+        <h2 class="cert-section-title">
+          <span class="cert-title-icon">🎓</span>
+          Certification Requirements & Credit Audit Engine
+        </h2>
+        <div class="cert-status-badges">
+          <div id="certBadgeLevel1" class="cert-badge badge-fulfilled">🟢 Year 1 Cert: Audit Ready</div>
+          <div id="certBadgeLevel2" class="cert-badge badge-fulfilled">🟢 Year 2 Cert: Audit Ready</div>
+          <div id="certBadgeLevel3" class="cert-badge badge-fulfilled">🟢 Year 3 Cert: Audit Ready</div>
+        </div>
+      </div>
+
+      <div class="cert-table-wrapper">
+        <table class="cert-audit-table">
+          <thead>
+            <tr class="cert-th-group-row">
+              <th rowspan="2" class="cert-col-category">Module Category / Prerequisite</th>
+              <th colspan="3" class="cert-col-level level-y1">
+                Year 1 Certification (End of Term 4)<br>
+                <input type="text" id="certNameY1Input" class="cert-name-input"
+                  value="Certificate in Infocomm Technology" placeholder="Year 1 Certification Title">
+              </th>
+              <th colspan="3" class="cert-col-level level-y2">
+                Year 2 Certification (End of Term 8)<br>
+                <input type="text" id="certNameY2Input" class="cert-name-input" value="Nitec in Infocomm Technology"
+                  placeholder="Year 2 Certification Title">
+              </th>
+              <th colspan="3" class="cert-col-level level-y3">
+                Year 3 Certification (End of Term 12)<br>
+                <input type="text" id="certNameY3Input" class="cert-name-input"
+                  value="Higher Nitec in Software Development" placeholder="Year 3 Certification Title">
+              </th>
+            </tr>
+            <tr class="cert-th-sub-row">
+              <!-- Year 1 Level -->
+              <th class="sub-th">Req Cr</th>
+              <th class="sub-th">Sched Cr</th>
+              <th class="sub-th">Audit</th>
+
+              <!-- Year 2 Level -->
+              <th class="sub-th">Req Cr</th>
+              <th class="sub-th">Sched Cr</th>
+              <th class="sub-th">Audit</th>
+
+              <!-- Year 3 Level -->
+              <th class="sub-th">Req Cr</th>
+              <th class="sub-th">Sched Cr</th>
+              <th class="sub-th">Audit</th>
+            </tr>
+          </thead>
+          <tbody id="certAuditBody">
+            <!-- Dynamically rendered compliance rows -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Planner Display & Grid Sizing Settings Modal -->
+  <div id="plannerSettingsModal" class="modal-overlay hidden">
+    <div class="modal-card modal-large">
+      <div class="modal-header">
+        <h3>Course Schedule & Planner Settings ⚙️</h3>
+        <button id="settingsModalCloseBtn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Section 0: Course Offer Structure -->
+        <div class="form-section-title">Course Offer Structure</div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="courseDurationYearsSelect">Course Offer Structure</label>
+            <select id="courseDurationYearsSelect">
+              <option value="3" selected>3 Years Course (12 Terms / 6 Semesters)</option>
+              <option value="2">2 Years Course (8 Terms / 4 Semesters - Skips Foundation)</option>
+              <option value="accelerated">Accelerated Pathway (9 Terms - Prep T3, Core T4-5, Spec T6-9)</option>
+            </select>
+            <div class="field-hint">Choose between 3-Year (12 terms), 2-Year (8 terms), or Accelerated Pathway (9 terms:
+              Foundation T1-2, Prep T3, Core T4-5, Spec T6-9).</div>
+          </div>
+        </div>
+
+        <!-- Section 1: Column Width Sizing (Independent Controls) -->
+        <div class="form-section-title">Column Width Sizing (Independent Controls)</div>
+
+        <!-- First Column (Sidebar) Width Slider -->
+        <div class="form-group">
+          <div class="setting-label-line">
+            <label for="sidebarWidthInput">First Column (Exam Pattern / Meta Sidebar) Width</label>
+            <span id="sidebarWidthVal" class="setting-val-badge">220 px</span>
+          </div>
+          <input type="range" id="sidebarWidthInput" min="120" max="380" step="5" value="220">
+          <div class="field-hint">Independent width setting for the first column (labels & category titles).</div>
+        </div>
+
+        <!-- Term Columns Width Slider -->
+        <div class="form-group">
+          <div class="setting-label-line">
+            <label for="termColWidthInput">Term Columns (Module Widgets) Width</label>
+            <span id="termColWidthVal" class="setting-val-badge">170 px</span>
+          </div>
+          <input type="range" id="termColWidthInput" min="110" max="320" step="5" value="170">
+          <div class="field-hint">Adjust width for all 12 term columns to make widgets wider and reduce vertical text
+            wrapping.</div>
+        </div>
+
+        <!-- Section 2: Text Sizing & Typography -->
+        <div class="form-section-title">Text Sizing & Typography</div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <div class="setting-label-line">
+              <label for="modFontSizeInput">Module Widget Text Size</label>
+              <span id="modFontSizeVal" class="setting-val-badge">13.5 px</span>
+            </div>
+            <input type="range" id="modFontSizeInput" min="10" max="18" step="0.5" value="13.5">
+          </div>
+        </div>
+
+        <!-- Section 3: Widget Padding & Vertical Spacing -->
+        <div class="form-section-title">Widget Padding & Vertical Spacing</div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <div class="setting-label-line">
+              <label for="modPaddingInput">Widget Internal Padding</label>
+              <span id="modPaddingVal" class="setting-val-badge">8 px</span>
+            </div>
+            <input type="range" id="modPaddingInput" min="4" max="18" step="1" value="8">
+          </div>
+
+          <div class="form-group flex-1">
+            <div class="setting-label-line">
+              <label for="modGapInput">Widget Vertical Margin / Gap</label>
+              <span id="modGapVal" class="setting-val-badge">6 px</span>
+            </div>
+            <input type="range" id="modGapInput" min="2" max="16" step="1" value="6">
+          </div>
+        </div>
+
+        <!-- Section 4: Grid & Workload Alerts -->
+        <div class="form-section-title">Grid Styling & Workload Alerts</div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="highHoursThresholdInput">Workload Warning Threshold (hrs/wk)</label>
+            <input type="number" id="highHoursThresholdInput" min="15" max="60" value="28">
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="gridStyleSelect">Grid Lines Visibility</label>
+            <select id="gridStyleSelect">
+              <option value="standard" selected>Standard Grid Lines</option>
+              <option value="high-contrast">High Contrast Lines</option>
+              <option value="subtle">Soft Subtle Lines</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Section 5: Widget Tag Information Display Settings -->
+        <div class="form-section-title">Widget Tag Information Display Settings</div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="durationDisplaySelect">Duration Tag</label>
+            <select id="durationDisplaySelect">
+              <option value="detailed" selected>Detailed (e.g. 3 Mths (1 Term • 10 Wks))</option>
+              <option value="simplified">Simplified (e.g. 3 Mths / 6 Mths)</option>
+              <option value="none">Hide Duration Tag</option>
+            </select>
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="creditsDisplaySelect">Credit Unit Tag</label>
+            <select id="creditsDisplaySelect">
+              <option value="show" selected>Show Credit Unit (e.g. 4 Cr)</option>
+              <option value="none">Hide Credit Unit</option>
+            </select>
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="hoursDisplaySelect">Total Hours Tag</label>
+            <select id="hoursDisplaySelect">
+              <option value="detailed" selected>Detailed (e.g. 80h (Th:40h Pr:40h • 4 hrs/wk))</option>
+              <option value="simplified">Simplified (e.g. 80h)</option>
+              <option value="none">Hide Hours Tag</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Section 6: Canvas Drag Panning Direction Settings -->
+        <div class="form-section-title">Canvas Mouse Drag Panning Direction</div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="allowVerticalPanSelect">Mouse Drag Panning Mode</label>
+            <select id="allowVerticalPanSelect">
+              <option value="disabled" selected>Horizontal Only (Left / Right Panning - Recommended)</option>
+              <option value="enabled">Horizontal & Vertical (Left / Right & Up / Down Panning)</option>
+            </select>
+            <div class="field-hint">By default, vertical up/down panning is disabled when dragging on empty cells to
+              prevent accidental page movement and motion dizziness.</div>
+          </div>
+        </div>
+
+        <!-- Section 7: Schedule Term Timeline Start Date -->
+        <div class="form-section-title">Schedule Term Timeline Start Date</div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="modalStartMonthSelect">Term 1 Starting Month</label>
+            <select id="modalStartMonthSelect">
+              <option value="0" selected>January (Jan)</option>
+              <option value="1">February (Feb)</option>
+              <option value="2">March (Mar)</option>
+              <option value="3">April (Apr)</option>
+              <option value="4">May (May)</option>
+              <option value="5">June (Jun)</option>
+              <option value="6">July (Jul)</option>
+              <option value="7">August (Aug)</option>
+              <option value="8">September (Sep)</option>
+              <option value="9">October (Oct)</option>
+              <option value="10">November (Nov)</option>
+              <option value="11">December (Dec)</option>
+            </select>
+          </div>
+          <div class="form-group flex-1">
+            <label for="modalStartYearInput">Term 1 Starting Year</label>
+            <input type="number" id="modalStartYearInput" min="2000" max="2099" value="2027">
+          </div>
+        </div>
+        <div class="field-hint">Editing Term 1's starting month and year automatically populates all 12 term column
+          headers in 3-month quarterly increments (e.g. Jan → Apr → Jul → Oct).</div>
+
+        <div class="modal-footer">
+          <button type="button" id="resetSettingsBtn" class="btn btn-outline" style="margin-right: auto;">Reset Sizing
+            Defaults</button>
+          <button type="button" id="cancelSettingsBtn" class="btn btn-outline">Cancel</button>
+          <button type="button" id="applySettingsBtn" class="btn btn-primary">Apply & Save Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add / Edit Teaching Module Widget Modal -->
+  <div id="moduleModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add Teaching Module Widget</h3>
+        <button id="modalCloseBtn" class="btn-close">&times;</button>
+      </div>
+      <form id="moduleForm" class="modal-body">
+        <input type="hidden" id="moduleId">
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="modCode">Module Code *</label>
+            <input type="text" id="modCode" placeholder="e.g. IC33002FP" required>
+          </div>
+          <div class="form-group flex-2">
+            <label for="modTitle">Module Title *</label>
+            <input type="text" id="modTitle" placeholder="e.g. Operating Systems Essentials" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="modCategory">Category / Selection *</label>
+            <select id="modCategory" required>
+              <option value="Foundation">Sector Foundation Modules</option>
+              <option value="Preparatory">Preparatory Modules (Accelerated Pathway)</option>
+              <option value="Core">Cluster Core Modules</option>
+              <option value="Specialisation">Specialisation Modules</option>
+              <option value="Internship-3M">3 Month Internship (Specialisation)</option>
+              <option value="Internship-6M">6 Month Internship (Specialisation)</option>
+              <option value="CDC">Cross Disciplinary Core (CDC)</option>
+              <option value="Elective">Elective Modules</option>
+              <option value="Life-skills">Life Skills Modules</option>
+              <option value="Sports">Sports & Wellness Modules</option>
+            </select>
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="modType">Assessment Type *</label>
+            <select id="modType" required>
+              <option value="Type A">Type A (Final Examination)</option>
+              <option value="Type B">Type B (In-Course Assessment)</option>
+              <option value="General">General / Non-Exam</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="modDuration">Duration *</label>
+            <select id="modDuration" required>
+              <option value="3">3 Months (1 Term • 10 Weeks)</option>
+              <option value="6">6 Months (1 Semester / 2 Terms • 20 Weeks)</option>
+            </select>
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="modCredits">Credit Units *</label>
+            <input type="number" id="modCredits" min="0" max="30" value="4" required>
+          </div>
+        </div>
+
+        <!-- Teaching Hours Breakdown: Theory + Practical = Total -->
+        <div class="form-section-title">Teaching Hours Breakdown</div>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="modTheoryHours">Theory Hours *</label>
+            <input type="number" id="modTheoryHours" min="0" value="20" required>
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="modPracticalHours">Practical Hours *</label>
+            <input type="number" id="modPracticalHours" min="0" value="20" required>
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="modTotalHours">Total Hours (Auto)</label>
+            <input type="number" id="modTotalHours" class="input-readonly" readonly value="40">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="modStartTerm">Start Term (1 - 12) *</label>
+          <select id="modStartTerm" required>
+            <option value="1">Term 1 (Sem 1)</option>
+            <option value="2">Term 2 (Sem 1)</option>
+            <option value="3">Term 3 (Sem 2)</option>
+            <option value="4">Term 4 (Sem 2)</option>
+            <option value="5">Term 5 (Sem 3)</option>
+            <option value="6">Term 6 (Sem 3)</option>
+            <option value="7">Term 7 (Sem 4)</option>
+            <option value="8">Term 8 (Sem 4)</option>
+            <option value="9">Term 9 (Sem 5)</option>
+            <option value="10">Term 10 (Sem 5)</option>
+            <option value="11">Term 11 (Sem 6)</option>
+            <option value="12">Term 12 (Sem 6)</option>
+          </select>
+          <div id="weeklyRatePreview" class="field-hint">Calculated Rate: 4 hrs/wk (10 weeks)</div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="deleteModBtn" class="btn btn-danger"
+            style="margin-right: auto; display: none;">Delete Widget</button>
+          <button type="button" id="cancelModBtn" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Module</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add New Course Tab Modal -->
+  <div id="addCourseTabModal" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Create New Course Plan Tab</h3>
+        <button type="button" id="tabModalCloseBtn" class="btn-close">&times;</button>
+      </div>
+
+      <form id="addCourseTabForm" class="modal-body">
+        <div class="form-group">
+          <label for="newTabShortName">Tab Display Name (Short Form) *</label>
+          <input type="text" id="newTabShortName" placeholder="e.g. 3-Yr SD, 2-Yr Direct, Accelerated" required>
+          <div class="field-hint">Short name shown on the navigation tab bar (e.g. SD 3Yr, HN Direct).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="newTabCourseTitle">Full Official Course Title *</label>
+          <input type="text" id="newTabCourseTitle" placeholder="e.g. Higher Nitec in Software Development" required>
+          <div class="field-hint">Official full course title displayed in the active course container.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="newTabStructureSelect">Course Offer Structure *</label>
+          <select id="newTabStructureSelect" required>
+            <option value="3" selected>3 Years Course (12 Terms / 6 Semesters)</option>
+            <option value="2">2 Years Course (8 Terms / 4 Semesters - Skips Foundation)</option>
+            <option value="accelerated">Accelerated Pathway (9 Terms - Prep T3, Core T4-5, Spec T6-9)</option>
+          </select>
+          <div class="field-hint">Choose between 3-Year, 2-Year (direct entry), or Accelerated Pathway (9 Terms:
+            Foundation T1-2, Prep T3, Core T4-5, Spec T6-9).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="newTabTemplateSelect">Starter Template Option</label>
+          <select id="newTabTemplateSelect">
+            <option value="preset">[Fictional Preset] Software Development</option>
+            <option value="clone">Clone Current Active Course Schedule</option>
+            <option value="blank">Empty / Blank Course Plan</option>
+          </select>
+          <div class="field-hint">Choose whether to start with a preset template, duplicate your current tab, or start
+            blank.</div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="cancelTabModalBtn" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Course Tab</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- About App Modal -->
+  <div id="aboutModal" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="logo-icon" style="width: 32px; height: 32px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="modal-title" style="margin: 0; font-size: 1.15rem;">About Course Schedule & Module Planner</h3>
+            <span style="font-size: 0.775rem; color: var(--text-muted);">Version 3.0 (Multi-Course Edition)</span>
+          </div>
+        </div>
+        <button type="button" id="aboutModalCloseBtn" class="btn-close">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 16px 0; display: flex; flex-direction: column; gap: 14px;">
+        <p style="font-size: 0.875rem; line-height: 1.5; color: var(--text-primary); margin: 0;">
+          <strong>Course Schedule & Module Planner</strong> is an interactive web-based curriculum planning tool
+          designed for academic leaders, curriculum designers, and course managers. It streamlines the structure and
+          mapping of multi-year academic courses across <strong>3-Year (12 Terms)</strong>, <strong>2-Year Direct Entry
+            (8 Terms)</strong>, and <strong>Accelerated Pathway (9 Terms)</strong> structures.
+        </p>
+
+        <div
+          style="background-color: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; font-size: 0.825rem; display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">✨ Key Capabilities</div>
+          <div>• <strong>Multi-Pathway Structures</strong>: 3-Year, 2-Year Direct Entry, & Accelerated Pathway.</div>
+          <div>• <strong>Multi-Course Tabs</strong>: Manage multiple course structures simultaneously with tab renaming
+            & pastel themes.</div>
+          <div>• <strong>Interactive Drag & Drop</strong>: Drag module widgets across term columns with workload rate
+            calculations.</div>
+          <div>• <strong>Certification Audit Engine</strong>: Real-time credit auditing & prerequisite compliance
+            checks.</div>
+          <div>• <strong>JSON Data Export/Import</strong>: Save and restore full multi-course workspaces effortlessly.
+          </div>
+        </div>
+
+        <div
+          style="background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(99,102,241,0.08)); border: 1px solid rgba(37,99,235,0.2); border-radius: var(--radius-md); padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div
+              style="font-size: 0.775rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+              Author & Creator</div>
+            <div style="font-size: 0.95rem; font-weight: 700; color: var(--primary-accent); margin-top: 2px;">Built by:
+              Khiew Tzong Yong (ITE College West)</div>
+          </div>
+          <div style="font-size: 1.25rem;">👨‍💻</div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="padding-top: 12px; border-top: 1px solid var(--border-color);">
+        <button type="button" id="closeAboutModalBtn" class="btn btn-primary" style="margin-left: auto;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Course Schedule & Teaching Module Planner Engine
+     * 12 Independent Term Columns Grid Layout
+     * 6-Month Modules Visually Span 2 Terms Without Cell Merging
+     */
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // App State & Data
+      let modules = [];
+      let currentEditingModuleId = null;
+
+      function handleCampusInputChange(e) {
+        const term = parseInt(e.target.dataset.term, 10);
+        const field = e.target.dataset.field;
+        const val = parseInt(e.target.value, 10) || 0;
+
+        if (!campusClasses[term]) {
+          campusClasses[term] = { hf3: 0, hf2: 0, wsd: 0, sctp: 0 };
+        }
+
+        campusClasses[term][field] = val;
+
+        const c = campusClasses[term];
+        const total = Number(c.hf3 || 0) + Number(c.hf2 || 0) + Number(c.wsd || 0) + Number(c.sctp || 0);
+
+        const totalSpan = document.getElementById(`campusTotalTerm_${term}`);
+        if (totalSpan) {
+          totalSpan.textContent = total;
+        }
+
+        saveLocalState();
+      }
+
+      const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+      function getTermDateInfo(termNumber) {
+        const startMonth = Number(plannerSettings.startMonth) || 0;
+        const startYear = Number(plannerSettings.startYear) || 2027;
+
+        const totalMonthsOffset = (termNumber - 1) * 3;
+        const monthIndex = (startMonth + totalMonthsOffset) % 12;
+        const yearOffset = Math.floor((startMonth + totalMonthsOffset) / 12);
+        const calculatedYear = startYear + yearOffset;
+
+        return {
+          term: termNumber,
+          monthName: MONTH_NAMES[monthIndex],
+          year: calculatedYear,
+          formatted: `Term ${termNumber}, ${MONTH_NAMES[monthIndex]} ${calculatedYear}`
+        };
+      }
+
+      function getMaxTerms() {
+        const struct = String(plannerSettings.courseStructure || plannerSettings.courseDurationYears || '3');
+        if (struct === '2') return 8;
+        if (struct === 'accelerated') return 9;
+        return 12;
+      }
+
+      function renderTermHeaders() {
+        const thead = document.querySelector('.schedule-matrix thead');
+        if (!thead) return;
+
+        const struct = String(plannerSettings.courseStructure || plannerSettings.courseDurationYears || '3');
+        const maxTerms = getMaxTerms();
+
+        let yearHeadersHtml = '<th rowspan="2" class="sidebar-col-header">Exam Pattern / Meta Sidebar</th>';
+        if (struct === '2') {
+          yearHeadersHtml += `
+            <th colspan="4" class="year-header year-1">Year 1 (Core & Elective modules)</th>
+            <th colspan="4" class="year-header year-2">Year 2 (Specialisation & Internship)</th>
+          `;
+        } else if (struct === 'accelerated') {
+          yearHeadersHtml += `
+            <th colspan="3" class="year-header year-1">Phase 1: Foundation & Prep (Terms 1 - 3)</th>
+            <th colspan="2" class="year-header year-2">Phase 2: Core Modules (Terms 4 - 5)</th>
+            <th colspan="4" class="year-header year-3">Phase 3: Specialisation & Internship (Terms 6 - 9)</th>
+          `;
+        } else {
+          yearHeadersHtml += `
+            <th colspan="4" class="year-header year-1">Year 1 (Foundation modules)</th>
+            <th colspan="4" class="year-header year-2">Year 2 (Core modules)</th>
+            <th colspan="4" class="year-header year-3">Year 3 (Specialisation modules)</th>
+          `;
+        }
+
+        let termHeadersHtml = '';
+        let noOfClassesHtml = '<td class="sidebar-label">No. of Classes</td>';
+
+        for (let term = 1; term <= maxTerms; term++) {
+          const info = getTermDateInfo(term);
+          const semNum = Math.ceil(term / 2);
+          termHeadersHtml += `<th class="term-header">Term ${term}, ${info.monthName} ${info.year}<br><span class="sub-term-info">10 Wks • Sem ${semNum}</span></th>`;
+          noOfClassesHtml += '<td>-</td>';
+        }
+
+        thead.innerHTML = `
+          <tr>${yearHeadersHtml}</tr>
+          <tr id="termHeadersRow">${termHeadersHtml}</tr>
+          <tr class="header-meta-row">${noOfClassesHtml}</tr>
+        `;
+
+        // Update Subtitle in App Header
+        const subtitleEl = document.querySelector('.app-subtitle');
+        if (subtitleEl) {
+          if (struct === '2') {
+            subtitleEl.textContent = 'Curriculum Design • 2 Years (4 Semesters / 8 Terms)';
+          } else if (struct === 'accelerated') {
+            subtitleEl.textContent = 'Curriculum Design • Accelerated Pathway (5 Semesters / 9 Terms)';
+          } else {
+            subtitleEl.textContent = 'Curriculum Design • 3 Years (6 Semesters / 12 Terms)';
+          }
+        }
+
+        // Sync Metadata Bar & Modal inputs
+        const startMonthSelect = document.getElementById('startMonthSelect');
+        const startYearInput = document.getElementById('startYearInput');
+        const durationSelect = document.getElementById('courseDurationYearsSelect');
+        if (startMonthSelect) startMonthSelect.value = plannerSettings.startMonth !== undefined ? plannerSettings.startMonth : 0;
+        if (startYearInput) startYearInput.value = plannerSettings.startYear || 2027;
+        if (durationSelect) durationSelect.value = plannerSettings.courseStructure || plannerSettings.courseDurationYears || '3';
+      }
+
+      // Master Default Preset Payload (Higher Nitec in Software Development)
+      const DEFAULT_PRESET_PAYLOAD = {
+        version: "2.0",
+        exportedAt: "2026-08-11T18:03:41.717Z",
+        metadata: {
+          effectDate: "With effect from Jan 2027",
+          courseTitle: "Higher Nitec in Software Development",
+          college: "College West",
+          startMonth: 0,
+          startYear: 2027
+        },
+        plannerSettings: {
+          courseDurationYears: 3,
+          sidebarWidth: 220,
+          termColWidth: 250,
+          modFontSize: 13.5,
+          modPadding: 8,
+          modGap: 6,
+          highHoursThreshold: 28,
+          gridStyle: "standard",
+          durationDisplay: "simplified",
+          creditsDisplay: "show",
+          hoursDisplay: "simplified",
+          allowVerticalPan: "disabled",
+          startMonth: 0,
+          startYear: 2027
+        },
+        certRequirements: {
+          Foundation: { key: "Foundation", label: "Sector Foundation Modules", y1: 0, y2: 0, y3: 0 },
+          Core: { key: "Core", label: "Cluster Core Modules", y1: 0, y2: 0, y3: 0 },
+          Specialisation: { key: "Specialisation", label: "Specialisation Modules", y1: 0, y2: 0, y3: 0 },
+          "Life-skills": { key: "Life-skills", label: "LifeSkills Modules", y1: 0, y2: 0, y3: 0 },
+          Sports: { key: "Sports", label: "Sports & Wellness Modules", y1: 0, y2: 0, y3: 0 },
+          CDC: { key: "CDC", label: "Cross Disciplinary Core Modules", y1: 0, y2: 0, y3: 0 },
+          Elective: { key: "Elective", label: "Electives", y1: 0, y2: 0, y3: 0 },
+          internship: { key: "internship", label: "Internship Completion Prerequisite", y1: "None", y2: "None", y3: "None" }
+        },
+        certNames: {
+          y1: "Certificate in Infocomm Technology",
+          y2: "Nitec in Infocomm Technology",
+          y3: "Higher Nitec in Software Development"
+        },
+        campusClasses: {
+          1: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          2: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          3: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          4: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          5: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          6: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          7: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          8: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          9: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          10: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          11: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 },
+          12: { hf3: 0, hf2: 0, wsd: 0, sctp: 0 }
+        },
+        termRemarks: {
+          1: "", 2: "", 3: "", 4: "", 5: "", 6: "", 7: "", 8: "", 9: "", 10: "", 11: "", 12: ""
+        },
+        modules: [
+          { id: "m1", code: "IC33002FP", title: "Operating Systems Essentials", category: "Foundation", type: "Type A", credits: 3, duration: 3, theoryHours: 40, practicalHours: 40, totalHours: 80, startTerm: 2 },
+          { id: "m2", code: "IC33005FP", title: "UX & UI Design Fundamentals", category: "Foundation", type: "Type A", credits: 3, duration: 3, theoryHours: 30, practicalHours: 50, totalHours: 80, startTerm: 2 },
+          { id: "m3", code: "IC33003FP", title: "Application Security Essentials", category: "Foundation", type: "Type A", credits: 3, duration: 3, theoryHours: 40, practicalHours: 40, totalHours: 80, startTerm: 4 },
+          { id: "m4", code: "SD43002FP", title: "Object-Oriented Programming", category: "Core", type: "Type A", credits: 3, duration: 3, theoryHours: 35, practicalHours: 45, totalHours: 80, startTerm: 4 },
+          { id: "m5", code: "SD43003FP", title: "Database Design & SQL", category: "Core", type: "Type A", credits: 3, duration: 3, theoryHours: 35, practicalHours: 45, totalHours: 80, startTerm: 6 },
+          { id: "m6", code: "SD43004FP", title: "Web Application Development", category: "Core", type: "Type A", credits: 3, duration: 3, theoryHours: 35, practicalHours: 45, totalHours: 80, startTerm: 6 },
+          { id: "m7", code: "SD43007FP", title: "Full-Stack Web Engineering", category: "Core", type: "Type A", credits: 3, duration: 3, theoryHours: 35, practicalHours: 45, totalHours: 80, startTerm: 8 },
+          { id: "m8", code: "SD43005FP", title: "Software Testing & Quality Assurance", category: "Core", type: "Type A", credits: 3, duration: 3, theoryHours: 35, practicalHours: 45, totalHours: 80, startTerm: 8 },
+          { id: "m9", code: "IC33001FP", title: "Logic & Algorithmic Thinking", category: "Foundation", type: "Type B", credits: 3, duration: 3, theoryHours: 30, practicalHours: 50, totalHours: 80, startTerm: 1 },
+          { id: "m10", code: "IC33004FP", title: "Data Structures & Algorithms", category: "Foundation", type: "Type B", credits: 3, duration: 3, theoryHours: 20, practicalHours: 60, totalHours: 80, startTerm: 1 },
+          { id: "m11", code: "IC33006FP", title: "Programming 1", category: "Foundation", type: "Type B", credits: 3, duration: 3, theoryHours: 30, practicalHours: 50, totalHours: 80, startTerm: 3 },
+          { id: "m12", code: "IC33007FP", title: "Generative AI Essentials", category: "Foundation", type: "Type B", credits: 3, duration: 3, theoryHours: 20, practicalHours: 60, totalHours: 80, startTerm: 3 },
+          { id: "m13", code: "IC33008FP", title: "AI-Assisted Web Development", category: "Foundation", type: "Type B", credits: 3, duration: 3, theoryHours: 20, practicalHours: 60, totalHours: 80, startTerm: 3 },
+          { id: "m14", code: "SD43011FP", title: "Mobile App Development", category: "Specialisation", type: "Type B", credits: 3, duration: 3, theoryHours: 20, practicalHours: 30, totalHours: 50, startTerm: 5 },
+          { id: "m15", code: "SD43006FP", title: "Agile Software Project Management", category: "Core", type: "Type B", credits: 3, duration: 3, theoryHours: 30, practicalHours: 50, totalHours: 80, startTerm: 5 },
+          { id: "m16", code: "SD53010FP", title: "Cloud-Native App Development", category: "Specialisation", type: "Type B", credits: 3, duration: 3, theoryHours: 20, practicalHours: 60, totalHours: 80, startTerm: 7 },
+          { id: "m17", code: "SD53009FP", title: "API & Microservices Architecture", category: "Specialisation", type: "Type B", credits: 3, duration: 3, theoryHours: 20, practicalHours: 60, totalHours: 80, startTerm: 7 },
+          { id: "m18", code: "SD53011FP", title: "DevOps & CI/CD Pipelines", category: "Specialisation", type: "Type B", credits: 3, duration: 3, theoryHours: 20, practicalHours: 60, totalHours: 80, startTerm: 9 },
+          { id: "m19", code: "SD53000FP", title: "Secure Coding & Software Engineering", category: "Specialisation", type: "Type B", credits: 3, duration: 3, theoryHours: 20, practicalHours: 60, totalHours: 80, startTerm: 9 },
+          { id: "m20", code: "SD4901DFPE", title: "Internship Programme 1", category: "Internship-3M", type: "Type B", credits: 4, duration: 3, theoryHours: 0, practicalHours: 400, totalHours: 400, startTerm: 10 },
+          { id: "m21", code: "SD53006FPE", title: "Internship Programme 2", category: "Internship-6M", type: "Type B", credits: 8, duration: 6, theoryHours: 0, practicalHours: 800, totalHours: 800, startTerm: 11 },
+          { id: "m22", code: "IT49431", title: "Data Visualisation for Business", category: "Elective", type: "General", credits: 2, duration: 3, theoryHours: 13, practicalHours: 27, totalHours: 40, startTerm: 2 },
+          { id: "m23", code: "IT49381", title: "Version Control with Git", category: "Elective", type: "General", credits: 2, duration: 3, theoryHours: 10, practicalHours: 30, totalHours: 40, startTerm: 3 },
+          { id: "m24", code: "EC49270", title: "Fundamentals of Green Electronics & Sustainability", category: "Elective", type: "General", credits: 2, duration: 3, theoryHours: 20, practicalHours: 20, totalHours: 40, startTerm: 5 },
+          { id: "m25", code: "IT48010", title: "Design Thinking for Technology", category: "CDC", type: "General", credits: 3, duration: 3, theoryHours: 20, practicalHours: 60, totalHours: 80, startTerm: 4 },
+          { id: "m26", code: "EC49220", title: "Backend Frameworks with Python", category: "Elective", type: "General", credits: 2, duration: 3, theoryHours: 20, practicalHours: 20, totalHours: 40, startTerm: 6 },
+          { id: "m27", code: "SD48010", title: "Software Product Management", category: "CDC", type: "General", credits: 3, duration: 3, theoryHours: 50, practicalHours: 30, totalHours: 80, startTerm: 7 },
+          { id: "m28", code: "BI48010", title: "Understanding Entrepreneurship", category: "CDC", type: "General", credits: 3, duration: 3, theoryHours: 30, practicalHours: 50, totalHours: 80, startTerm: 9 },
+          { id: "m29", code: "LFS80304", title: "Personal & Professional Development I", category: "Life-skills", type: "General", credits: 2, duration: 6, theoryHours: 40, practicalHours: 0, totalHours: 40, startTerm: 1 },
+          { id: "m30", code: "LFS80305", title: "Personal & Professional Development II", category: "Life-skills", type: "General", credits: 2, duration: 6, theoryHours: 40, practicalHours: 0, totalHours: 40, startTerm: 5 },
+          { id: "m31", code: "LFS80306", title: "Personal & Professional Development III", category: "Life-skills", type: "General", credits: 2, duration: 6, theoryHours: 40, practicalHours: 0, totalHours: 40, startTerm: 7 },
+          { id: "m32", code: "SW81001", title: "Sports and Wellness 1", category: "Sports", type: "General", credits: 1, duration: 6, theoryHours: 0, practicalHours: 40, totalHours: 40, startTerm: 1 },
+          { id: "m33", code: "SW81003", title: "Sports and Wellness 4", category: "Sports", type: "General", credits: 1, duration: 6, theoryHours: 0, practicalHours: 40, totalHours: 40, startTerm: 5 },
+          { id: "m34", code: "SW81002", title: "Sports and Wellness 2", category: "Sports", type: "General", credits: 1, duration: 6, theoryHours: 0, practicalHours: 40, totalHours: 40, startTerm: 3 },
+          { id: "m35", code: "SW81004", title: "Sports and Wellness 3", category: "Sports", type: "General", credits: 1, duration: 6, theoryHours: 0, practicalHours: 40, totalHours: 40, startTerm: 7 }
+        ]
+      };
+
+      const DEFAULT_PLANNER_SETTINGS = DEFAULT_PRESET_PAYLOAD.plannerSettings;
+      const DEFAULT_CERT_REQUIREMENTS = DEFAULT_PRESET_PAYLOAD.certRequirements;
+      const DEFAULT_CERT_NAMES = DEFAULT_PRESET_PAYLOAD.certNames;
+      const DEFAULT_CAMPUS_CLASSES = DEFAULT_PRESET_PAYLOAD.campusClasses;
+      const DEFAULT_TERM_REMARKS = DEFAULT_PRESET_PAYLOAD.termRemarks;
+      const INITIAL_PRESET = DEFAULT_PRESET_PAYLOAD.modules;
+
+      let plannerSettings = JSON.parse(JSON.stringify(DEFAULT_PLANNER_SETTINGS));
+      let campusClasses = JSON.parse(JSON.stringify(DEFAULT_CAMPUS_CLASSES));
+      let certRequirements = JSON.parse(JSON.stringify(DEFAULT_CERT_REQUIREMENTS));
+      let certNames = JSON.parse(JSON.stringify(DEFAULT_CERT_NAMES));
+      let termRemarks = JSON.parse(JSON.stringify(DEFAULT_TERM_REMARKS));
+
+      function autoExpandTextarea(textarea) {
+        if (!textarea) return;
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.max(28, textarea.scrollHeight) + 'px';
+      }
+
+      function handleTermRemarkChange(e) {
+        const term = parseInt(e.target.dataset.term, 10);
+        autoExpandTextarea(e.target);
+        termRemarks[term] = e.target.value;
+        saveLocalState();
+      }
+
+      // Multi-Course Workspace State Management
+      let courses = [];
+      let activeCourseId = null;
+
+      function createDefaultCourseData(customTitle) {
+        const data = JSON.parse(JSON.stringify(DEFAULT_PRESET_PAYLOAD));
+        if (customTitle) {
+          data.metadata.courseTitle = customTitle;
+          data.certNames.y3 = customTitle;
+        }
+        data.plannerSettings.courseDurationYears = 3;
+        return data;
+      }
+
+      function create2YearPresetCourseData(customTitle) {
+        const data = JSON.parse(JSON.stringify(DEFAULT_PRESET_PAYLOAD));
+        if (customTitle) {
+          data.metadata.courseTitle = customTitle;
+          data.certNames.y3 = customTitle;
+        }
+        data.plannerSettings.courseDurationYears = 2;
+
+        data.certRequirements = {
+          Foundation: { key: "Foundation", label: "Sector Foundation Modules", y1: 0, y2: 0, y3: 0 },
+          Core: { key: "Core", label: "Cluster Core Modules", y1: 0, y2: 0, y3: 0 },
+          Specialisation: { key: "Specialisation", label: "Specialisation Modules", y1: 0, y2: 0, y3: 0 },
+          "Life-skills": { key: "Life-skills", label: "LifeSkills Modules", y1: 0, y2: 0, y3: 0 },
+          Sports: { key: "Sports", label: "Sports & Wellness Modules", y1: 0, y2: 0, y3: 0 },
+          CDC: { key: "CDC", label: "Cross Disciplinary Core Modules", y1: 0, y2: 0, y3: 0 },
+          Elective: { key: "Elective", label: "Electives", y1: 0, y2: 0, y3: 0 },
+          internship: { key: "internship", label: "Internship Completion Prerequisite", y1: "None", y2: "None", y3: "None" }
+        };
+
+        // Filter out Foundation modules (skip foundation for 2-year course) and map to Terms 1-8
+        const nonFoundation = data.modules.filter(m => m.category !== 'Foundation');
+        data.modules = nonFoundation.map(m => {
+          let t = m.startTerm;
+          if (t > 8) {
+            t = ((t - 1) % 8) + 1;
+          }
+          if (m.duration === 6) {
+            t = getValidStartTerm(t, 6);
+          }
+          return Object.assign({}, m, { startTerm: t });
+        });
+
+        return data;
+      }
+
+      function createAcceleratedPresetCourseData(customTitle) {
+        const data = JSON.parse(JSON.stringify(DEFAULT_PRESET_PAYLOAD));
+        if (customTitle) {
+          data.metadata.courseTitle = customTitle;
+          data.certNames.y3 = customTitle;
+        }
+        data.plannerSettings.courseStructure = 'accelerated';
+        data.plannerSettings.courseDurationYears = 'accelerated';
+
+        data.certNames = {
+          y1: "Certificate in Infocomm Technology (Accelerated Prep)",
+          y2: "Nitec in Infocomm Technology",
+          y3: customTitle || "Higher Nitec in Software Development (Accelerated)"
+        };
+
+        data.certRequirements = {
+          Foundation: { key: "Foundation", label: "Sector Foundation Modules", y1: 0, y2: 0, y3: 0 },
+          Core: { key: "Core", label: "Cluster Core Modules", y1: 0, y2: 0, y3: 0 },
+          Specialisation: { key: "Specialisation", label: "Specialisation Modules", y1: 0, y2: 0, y3: 0 },
+          "Life-skills": { key: "Life-skills", label: "LifeSkills Modules", y1: 0, y2: 0, y3: 0 },
+          Sports: { key: "Sports", label: "Sports & Wellness Modules", y1: 0, y2: 0, y3: 0 },
+          CDC: { key: "CDC", label: "Cross Disciplinary Core Modules", y1: 0, y2: 0, y3: 0 },
+          Elective: { key: "Elective", label: "Electives", y1: 0, y2: 0, y3: 0 },
+          internship: { key: "internship", label: "Internship Completion Prerequisite", y1: "None", y2: "None", y3: "None" }
+        };
+
+        // Map default modules into Terms 1 to 9:
+        // Terms 1 & 2: Foundation
+        // Term 3: Preparatory
+        // Terms 4 & 5: Core
+        // Terms 6, 7, 8, 9: Specialisation & Internship
+        data.modules = data.modules.map(m => {
+          let t = m.startTerm;
+          let cat = m.category;
+          let cr = m.credits;
+          if (m.category === 'Foundation') {
+            if (m.code.includes('33006FP') || m.code.includes('33007FP') || m.code.includes('33008FP')) {
+              t = 3; // Preparatory modules in Term 3
+              cat = 'Preparatory';
+              cr = 0;
+            } else {
+              t = (t % 2 === 0) ? 2 : 1;
+            }
+          } else if (m.category === 'Core') {
+            t = (t <= 6) ? 4 : 5;
+          } else if (m.category === 'Specialisation' || m.category === 'Internship-3M' || m.category === 'Internship-6M') {
+            t = Math.min(9, Math.max(6, t - 1));
+          } else {
+            if (t > 9) t = ((t - 1) % 9) + 1;
+          }
+          if (m.duration === 6) {
+            t = getValidStartTerm(t, 6);
+          }
+          return Object.assign({}, m, { startTerm: t, category: cat, credits: cr });
+        });
+
+        return data;
+      }
+
+      function syncCurrentToActiveCourse() {
+        const activeCourse = courses.find(c => c.id === activeCourseId);
+        if (!activeCourse) return;
+
+        const courseTitleVal = document.getElementById('courseTitleInput').value.trim() || (activeCourse.data && activeCourse.data.metadata && activeCourse.data.metadata.courseTitle) || "Higher Nitec in Software Development";
+
+        activeCourse.data = {
+          version: '3.0',
+          exportedAt: new Date().toISOString(),
+          metadata: {
+            effectDate: document.getElementById('effectDateInput').value,
+            courseTitle: courseTitleVal,
+            college: document.getElementById('collegeInput').value,
+            startMonth: plannerSettings.startMonth,
+            startYear: plannerSettings.startYear
+          },
+          plannerSettings: plannerSettings,
+          certRequirements: certRequirements,
+          certNames: certNames,
+          campusClasses: campusClasses,
+          termRemarks: termRemarks,
+          modules: modules
+        };
+      }
+
+      function loadActiveCourseToWorkspace() {
+        const activeCourse = courses.find(c => c.id === activeCourseId);
+        if (!activeCourse) return;
+
+        const data = activeCourse.data;
+        if (data.metadata) {
+          if (data.metadata.effectDate !== undefined) document.getElementById('effectDateInput').value = data.metadata.effectDate;
+          if (data.metadata.courseTitle !== undefined) document.getElementById('courseTitleInput').value = data.metadata.courseTitle;
+          if (data.metadata.college !== undefined) document.getElementById('collegeInput').value = data.metadata.college;
+        }
+
+        plannerSettings = Object.assign({}, DEFAULT_PLANNER_SETTINGS, data.plannerSettings);
+        certRequirements = Object.assign({}, DEFAULT_CERT_REQUIREMENTS, data.certRequirements);
+        certNames = Object.assign({}, DEFAULT_CERT_NAMES, data.certNames);
+        campusClasses = Object.assign({}, DEFAULT_CAMPUS_CLASSES, data.campusClasses);
+        termRemarks = Object.assign({}, DEFAULT_TERM_REMARKS, data.termRemarks);
+        modules = (data.modules || []).map(normalizeModule);
+      }
+
+      const TAB_COLOR_SCHEMES = [
+        'tab-color-indigo',
+        'tab-color-emerald',
+        'tab-color-amber',
+        'tab-color-rose',
+        'tab-color-purple',
+        'tab-color-teal',
+        'tab-color-orange',
+        'tab-color-violet'
+      ];
+
+      function renderCourseTabs() {
+        const container = document.getElementById('courseTabsList');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        courses.forEach((course, index) => {
+          const isCurrent = course.id === activeCourseId;
+          const colorClass = TAB_COLOR_SCHEMES[index % TAB_COLOR_SCHEMES.length];
+          const tabEl = document.createElement('div');
+          tabEl.className = `course-tab-item ${colorClass} ${isCurrent ? 'active' : ''}`;
+          tabEl.dataset.courseId = course.id;
+
+          const titleSpan = document.createElement('span');
+          titleSpan.className = 'tab-title-text';
+          titleSpan.textContent = course.name;
+          titleSpan.title = `${course.name} (Double-click to rename)`;
+          tabEl.appendChild(titleSpan);
+
+          // Inline rename on double click
+          tabEl.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
+            startTabRename(course.id, tabEl, titleSpan);
+          });
+
+          // Switch tab on click
+          tabEl.addEventListener('click', (e) => {
+            if (e.target.classList.contains('tab-close-btn') || e.target.classList.contains('tab-rename-input')) return;
+            switchCourseTab(course.id);
+          });
+
+          // Delete button (only show close if > 1 course)
+          if (courses.length > 1) {
+            const closeBtn = document.createElement('span');
+            closeBtn.className = 'tab-close-btn';
+            closeBtn.innerHTML = '&times;';
+            closeBtn.title = 'Delete this course tab';
+            closeBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              deleteCourseTab(course.id);
+            });
+            tabEl.appendChild(closeBtn);
+          }
+
+          container.appendChild(tabEl);
+        });
+      }
+
+      function startTabRename(courseId, tabEl, titleSpan) {
+        const course = courses.find(c => c.id === courseId);
+        if (!course) return;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'tab-rename-input';
+        input.value = course.name;
+
+        function finishRename() {
+          const val = input.value.trim();
+          if (val && val !== course.name) {
+            renameCourseTab(courseId, val);
+          } else {
+            renderCourseTabs();
+          }
+        }
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            finishRename();
+          } else if (e.key === 'Escape') {
+            renderCourseTabs();
+          }
+        });
+
+        input.addEventListener('blur', finishRename);
+
+        tabEl.replaceChild(input, titleSpan);
+        input.focus();
+        input.select();
+      }
+
+      function switchCourseTab(courseId) {
+        if (courseId === activeCourseId) return;
+        syncCurrentToActiveCourse();
+        activeCourseId = courseId;
+        loadActiveCourseToWorkspace();
+        applyPlannerSettings();
+        renderTermHeaders();
+        renderMatrix();
+        renderCertAuditTable();
+        renderCourseTabs();
+        saveLocalState();
+      }
+
+      function addNewCourseTab(tabName, fullCourseTitle, templateType, durationYears = '3') {
+        syncCurrentToActiveCourse();
+
+        const newId = 'course_' + Date.now();
+        let newData;
+        const structStr = String(durationYears);
+        const titleForPreset = fullCourseTitle || tabName;
+
+        if (templateType === 'clone') {
+          const currentActive = courses.find(c => c.id === activeCourseId);
+          newData = JSON.parse(JSON.stringify(currentActive ? currentActive.data : DEFAULT_PRESET_PAYLOAD));
+          newData.metadata.courseTitle = titleForPreset;
+          newData.plannerSettings.courseStructure = structStr;
+          newData.plannerSettings.courseDurationYears = structStr;
+        } else if (templateType === 'blank') {
+          newData = JSON.parse(JSON.stringify(DEFAULT_PRESET_PAYLOAD));
+          newData.metadata.courseTitle = titleForPreset;
+          newData.certNames.y3 = titleForPreset;
+          newData.plannerSettings.courseStructure = structStr;
+          newData.plannerSettings.courseDurationYears = structStr;
+          newData.modules = [];
+          newData.termRemarks = { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '', 11: '', 12: '' };
+          newData.certRequirements = {
+            Foundation: { key: "Foundation", label: "Sector Foundation Modules", y1: 0, y2: 0, y3: 0 },
+            Core: { key: "Core", label: "Cluster Core Modules", y1: 0, y2: 0, y3: 0 },
+            Specialisation: { key: "Specialisation", label: "Specialisation Modules", y1: 0, y2: 0, y3: 0 },
+            "Life-skills": { key: "Life-skills", label: "LifeSkills Modules", y1: 0, y2: 0, y3: 0 },
+            Sports: { key: "Sports", label: "Sports & Wellness Modules", y1: 0, y2: 0, y3: 0 },
+            CDC: { key: "CDC", label: "Cross Disciplinary Core Modules", y1: 0, y2: 0, y3: 0 },
+            Elective: { key: "Elective", label: "Electives", y1: 0, y2: 0, y3: 0 },
+            internship: { key: "internship", label: "Internship Completion Prerequisite", y1: "None", y2: "None", y3: "None" }
+          };
+        } else { // preset
+          if (structStr === '2') {
+            newData = create2YearPresetCourseData(titleForPreset);
+          } else if (structStr === 'accelerated') {
+            newData = createAcceleratedPresetCourseData(titleForPreset);
+          } else {
+            newData = createDefaultCourseData(titleForPreset);
+          }
+        }
+
+        const newCourse = {
+          id: newId,
+          name: tabName,
+          data: newData
+        };
+
+        courses.push(newCourse);
+        activeCourseId = newId;
+
+        loadActiveCourseToWorkspace();
+        applyPlannerSettings();
+        renderTermHeaders();
+        renderMatrix();
+        renderCertAuditTable();
+        renderCourseTabs();
+        saveLocalState();
+      }
+
+      function renameCourseTab(courseId, newName) {
+        const target = courses.find(c => c.id === courseId);
+        if (!target) return;
+        target.name = newName;
+        renderCourseTabs();
+        saveLocalState();
+      }
+
+      function deleteCourseTab(courseId) {
+        if (courses.length <= 1) {
+          alert('Workspace requires at least one course tab.');
+          return;
+        }
+        const target = courses.find(c => c.id === courseId);
+        if (!target) return;
+
+        if (confirm(`Are you sure you want to delete the course tab "${target.name}"?`)) {
+          courses = courses.filter(c => c.id !== courseId);
+          if (activeCourseId === courseId) {
+            activeCourseId = courses[0].id;
+            loadActiveCourseToWorkspace();
+            applyPlannerSettings();
+            renderTermHeaders();
+            renderMatrix();
+            renderCertAuditTable();
+          }
+          renderCourseTabs();
+          saveLocalState();
+        }
+      }
+
+      function openAddTabModal() {
+        document.getElementById('addCourseTabForm').reset();
+        document.getElementById('newTabShortName').value = '';
+        document.getElementById('newTabCourseTitle').value = '';
+        document.getElementById('addCourseTabModal').classList.remove('hidden');
+      }
+
+      function closeAddTabModal() {
+        document.getElementById('addCourseTabModal').classList.add('hidden');
+      }
+
+      function handleAddTabSubmit(e) {
+        e.preventDefault();
+        const shortName = document.getElementById('newTabShortName').value.trim();
+        const fullTitle = document.getElementById('newTabCourseTitle').value.trim() || shortName;
+        const templateType = document.getElementById('newTabTemplateSelect').value;
+        const durationYears = document.getElementById('newTabStructureSelect').value || '3';
+        if (!shortName) return;
+
+        addNewCourseTab(shortName, fullTitle, templateType, durationYears);
+        closeAddTabModal();
+      }
+
+      // Table Row Categories Configuration
+      const ROW_CONFIGS = [
+        { key: 'Type A', label: 'Type A Modules', isType: true },
+        { key: 'Type B', label: 'Type B Modules', isType: true },
+        { key: 'CDC', label: 'Cross Disciplinary Core Modules', isCategory: true },
+        { key: 'Elective', label: 'Elective Modules', isCategory: true },
+        { key: 'Life-skills', label: 'Life Skills Modules', isCategory: true },
+        { key: 'Sports', label: 'Sports & Wellness Modules', isCategory: true }
+      ];
+
+      // Helper: Get designated row key for a module based on user settings
+      function getDesignatedRowKey(mod) {
+        if (mod.type === 'Type A') return 'Type A';
+        if (mod.type === 'Type B') return 'Type B';
+        return mod.category;
+      }
+
+      // Calculate Total Hours (Theory + Practical)
+      function getTotalHours(mod) {
+        const th = Number(mod.theoryHours) || 0;
+        const pr = Number(mod.practicalHours) || 0;
+        return th + pr;
+      }
+
+      // Calculate Weekly Hours based on total hours & duration
+      function getWeeklyHours(mod) {
+        const weeks = mod.duration === 6 ? 20 : 10;
+        const total = getTotalHours(mod);
+        return Math.round((total / weeks) * 10) / 10;
+      }
+
+      // Helper: Check if a start term is locked for a 6-month module
+      function is6mStartLocked(termVal, duration) {
+        if (duration !== 6) return false;
+        const struct = String(plannerSettings.courseStructure || plannerSettings.courseDurationYears || '3');
+
+        if (struct === 'accelerated') {
+          // Accelerated Pathway:
+          // Phase 1 (Terms 1 - 3): Even terms (Term 2) are locked.
+          if (termVal < 4) {
+            return termVal % 2 === 0;
+          }
+          // Phase 2 & 3 (Terms 4 - 9): Even terms are ALLOWED (Terms 4, 6, 8 allowed).
+          // Term 9 cannot fit a 6-month module (spans beyond Term 9).
+          if (termVal >= 9) return true;
+          return false;
+        }
+
+        // Standard 3-Year and 2-Year courses: Even terms are locked for 6M modules
+        return termVal % 2 === 0;
+      }
+
+      // Constrain 6-month module to valid start terms based on course structure rules
+      function getValidStartTerm(term, duration) {
+        if (duration === 6) {
+          const maxTerms = getMaxTerms();
+          if (term >= maxTerms) term = maxTerms - 1;
+          if (is6mStartLocked(term, duration)) {
+            return Math.max(1, term - 1);
+          }
+        }
+        return term;
+      }
+
+      // Apply Planner Grid Sizing & Display Settings to DOM
+      function applyPlannerSettings() {
+        const maxTerms = getMaxTerms();
+        document.documentElement.style.setProperty('--max-terms', maxTerms);
+
+        // 1. Independent First Column & Term Column Widths
+        document.documentElement.style.setProperty('--sidebar-col-width', `${plannerSettings.sidebarWidth || 220}px`);
+        document.documentElement.style.setProperty('--term-col-width', `${plannerSettings.termColWidth || 170}px`);
+
+        // 2. Widget Font Size, Padding, and Vertical Gap
+        const fontRem = (plannerSettings.modFontSize || 13.5) / 16;
+        const padV = plannerSettings.modPadding || 8;
+        const padH = Math.min(padV + 2, 16);
+        const gapV = plannerSettings.modGap || 6;
+
+        document.documentElement.style.setProperty('--mod-font-size', `${fontRem}rem`);
+        document.documentElement.style.setProperty('--mod-padding-v', `${padV}px`);
+        document.documentElement.style.setProperty('--mod-padding-h', `${padH}px`);
+        document.documentElement.style.setProperty('--mod-margin-bottom', `${gapV}px`);
+
+        // 3. Grid Line Style Classes on Body
+        document.body.classList.remove('grid-standard', 'grid-high-contrast', 'grid-subtle');
+        document.body.classList.add(`grid-${plannerSettings.gridStyle}`);
+      }
+
+      function loadPresetDefaults() {
+        const payload = JSON.parse(JSON.stringify(DEFAULT_PRESET_PAYLOAD));
+
+        if (payload.metadata) {
+          if (payload.metadata.effectDate !== undefined) document.getElementById('effectDateInput').value = payload.metadata.effectDate;
+          if (payload.metadata.courseTitle !== undefined) document.getElementById('courseTitleInput').value = payload.metadata.courseTitle;
+          if (payload.metadata.college !== undefined) document.getElementById('collegeInput').value = payload.metadata.college;
+        }
+
+        plannerSettings = Object.assign({}, DEFAULT_PLANNER_SETTINGS, payload.plannerSettings);
+        certRequirements = Object.assign({}, DEFAULT_CERT_REQUIREMENTS, payload.certRequirements);
+        certNames = Object.assign({}, DEFAULT_CERT_NAMES, payload.certNames);
+        campusClasses = Object.assign({}, DEFAULT_CAMPUS_CLASSES, payload.campusClasses);
+        termRemarks = Object.assign({}, DEFAULT_TERM_REMARKS, payload.termRemarks);
+        modules = payload.modules.map(normalizeModule);
+      }
+
+      // Initialize App
+      function init() {
+        loadLocalState();
+        applyPlannerSettings();
+        renderTermHeaders();
+        renderMatrix();
+        renderCertAuditTable();
+        renderCourseTabs();
+        setupEventListeners();
+      }
+
+      function loadLocalState() {
+        const saved = localStorage.getItem('sow_multi_course_planner_v3');
+        if (saved) {
+          try {
+            const loadedWorkspace = JSON.parse(saved);
+            if (loadedWorkspace && Array.isArray(loadedWorkspace.courses) && loadedWorkspace.courses.length > 0) {
+              courses = loadedWorkspace.courses;
+              activeCourseId = loadedWorkspace.activeCourseId || courses[0].id;
+              loadActiveCourseToWorkspace();
+              renderCourseTabs();
+              return;
+            }
+          } catch (e) { }
+        }
+
+        // Migrate from v2.0 single course if available
+        const v2Saved = localStorage.getItem('sow_schedule_modules');
+        if (v2Saved) {
+          try {
+            const loadedV2 = JSON.parse(v2Saved);
+            const courseTitle = (loadedV2.metadata && loadedV2.metadata.courseTitle) || DEFAULT_PRESET_PAYLOAD.metadata.courseTitle;
+            const migratedCourse = {
+              id: 'course_1',
+              name: courseTitle,
+              data: loadedV2
+            };
+            courses = [migratedCourse];
+            activeCourseId = migratedCourse.id;
+            loadActiveCourseToWorkspace();
+            renderCourseTabs();
+            return;
+          } catch (e) { }
+        }
+
+        // Default initial single course
+        const defaultCourse = {
+          id: 'course_1',
+          name: DEFAULT_PRESET_PAYLOAD.metadata.courseTitle,
+          data: JSON.parse(JSON.stringify(DEFAULT_PRESET_PAYLOAD))
+        };
+        courses = [defaultCourse];
+        activeCourseId = defaultCourse.id;
+        loadActiveCourseToWorkspace();
+        renderCourseTabs();
+      }
+
+      function normalizeModule(m) {
+        if (m.theoryHours === undefined || m.practicalHours === undefined) {
+          const tot = Number(m.totalHours) || (m.hours ? m.hours * (m.duration === 6 ? 20 : 10) : 40);
+          m.theoryHours = Math.round(tot / 2);
+          m.practicalHours = tot - m.theoryHours;
+        }
+        if (m.credits === undefined) {
+          m.credits = 4;
+        }
+        m.totalHours = getTotalHours(m);
+        m.startTerm = getValidStartTerm(m.startTerm, m.duration);
+        return m;
+      }
+
+      function saveLocalState() {
+        syncCurrentToActiveCourse();
+        const workspaceData = {
+          version: '3.0',
+          savedAt: new Date().toISOString(),
+          activeCourseId: activeCourseId,
+          courses: courses
+        };
+        localStorage.setItem('sow_multi_course_planner_v3', JSON.stringify(workspaceData));
+      }
+
+      // Render Schedule Grid Matrix - Dynamic 8, 9, or 12 Term Columns
+      function renderMatrix() {
+        renderTermHeaders();
+        const tbody = document.getElementById('scheduleBody');
+        tbody.innerHTML = '';
+
+        const maxTerms = getMaxTerms();
+
+        // Render Category/Type Rows
+        ROW_CONFIGS.forEach(rowConf => {
+          const tr = document.createElement('tr');
+          tr.className = `schedule-row row-${rowConf.key.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+
+          // Sidebar Header Cell
+          const sidebarTd = document.createElement('td');
+          sidebarTd.className = 'sidebar-label';
+          sidebarTd.textContent = rowConf.label;
+          tr.appendChild(sidebarTd);
+
+          // Identify terms in this row spanned underneath a 6-month module starting in preceding term
+          const spannedTermsInRow = new Set();
+          modules.forEach(m => {
+            const designatedRow = getDesignatedRowKey(m);
+            if (designatedRow === rowConf.key && m.duration === 6) {
+              spannedTermsInRow.add(m.startTerm + 1);
+            }
+          });
+
+          // Render Term Slots individually up to maxTerms
+          for (let term = 1; term <= maxTerms; term++) {
+            const td = document.createElement('td');
+            td.className = 'term-slot';
+            td.dataset.term = term;
+            td.dataset.rowKey = rowConf.key;
+
+            if (spannedTermsInRow.has(term)) {
+              td.classList.add('spanned-underneath');
+            }
+
+            // Find modules belonging to this row & starting at this term
+            const cellModules = modules.filter(m => {
+              const designatedRow = getDesignatedRowKey(m);
+              return designatedRow === rowConf.key && m.startTerm === term;
+            });
+
+            // Check if any module starting at this term is a 6-month (2-term) module
+            const has6mModule = cellModules.some(m => m.duration === 6);
+            if (has6mModule) {
+              td.classList.add('has-span-6m');
+            }
+
+            cellModules.forEach(mod => {
+              const widgetEl = createModuleWidget(mod);
+              td.appendChild(widgetEl);
+            });
+
+            // Setup HTML5 Drag and Drop target listeners
+            td.addEventListener('dragover', handleDragOver);
+            td.addEventListener('dragleave', handleDragLeave);
+            td.addEventListener('drop', handleDrop);
+
+            tr.appendChild(td);
+          }
+
+          tbody.appendChild(tr);
+        });
+
+        // Render Summary Rows (hrs/wk, classes summary, remarks)
+        renderSummaryRows(tbody);
+
+        // Dynamically adjust padding-top to prevent overlaps under spanned 6-month modules
+        adjustSpannedOffsets();
+      }
+
+      // Helper to adjust padding-top for slots pushed down by spanned modules (6m widgets)
+      function adjustSpannedOffsets() {
+        const rows = document.querySelectorAll('.schedule-row');
+        rows.forEach(tr => {
+          const cells = Array.from(tr.querySelectorAll('.term-slot'));
+          cells.forEach(td => td.style.paddingTop = '');
+
+          for (let i = 0; i < cells.length; i++) {
+            const td = cells[i];
+            const widgets6m = Array.from(td.querySelectorAll('.module-widget.span-6m'));
+
+            let maxBottom = 0;
+            widgets6m.forEach(w => {
+              const bottom = w.offsetTop + w.offsetHeight;
+              if (bottom > maxBottom) {
+                maxBottom = bottom;
+              }
+            });
+
+            if (maxBottom > 0 && i + 1 < cells.length) {
+              const nextTd = cells[i + 1];
+              nextTd.style.paddingTop = `${maxBottom + 6}px`; // Adds 6px gap below spanned 6m module
+            }
+          }
+        });
+      }
+
+      // Create Module Widget Element
+      function createModuleWidget(mod) {
+        const widget = document.createElement('div');
+        widget.className = `module-widget ${mod.duration === 6 ? 'span-6m' : ''}`;
+        widget.draggable = true;
+        widget.dataset.id = mod.id;
+        widget.dataset.type = mod.type;
+        widget.dataset.category = mod.category;
+
+        const totalH = getTotalHours(mod);
+        const weekly = getWeeklyHours(mod);
+
+        const durationOpt = plannerSettings.durationDisplay || 'detailed';
+        const creditsOpt = plannerSettings.creditsDisplay || 'show';
+        const hoursOpt = plannerSettings.hoursDisplay || 'detailed';
+
+        let tagsHtml = '';
+
+        // 1. Duration Tag
+        if (durationOpt !== 'none') {
+          let durationText = '';
+          if (durationOpt === 'simplified') {
+            if (mod.category === 'Internship-3M') durationText = '3M Intern';
+            else if (mod.category === 'Internship-6M') durationText = '6M Intern';
+            else durationText = mod.duration === 6 ? '6 Mths' : '3 Mths';
+          } else {
+            if (mod.category === 'Internship-3M') durationText = '3M (10 Wks)';
+            else if (mod.category === 'Internship-6M') durationText = '6M (20 Wks)';
+            else durationText = mod.duration === 6 ? '6 Mths (2 Terms • 20 Wks)' : '3 Mths (1 Term • 10 Wks)';
+          }
+          tagsHtml += `<span class="mod-tag tag-duration">${durationText}</span>`;
+        }
+
+        // 2. Credits Tag
+        if (creditsOpt !== 'none') {
+          tagsHtml += `<span class="mod-tag tag-credits">${mod.credits} Cr</span>`;
+        }
+
+        // 3. Hours Tag
+        if (hoursOpt !== 'none') {
+          let hoursText = '';
+          if (hoursOpt === 'simplified') {
+            hoursText = `${totalH}h`;
+          } else {
+            hoursText = `${totalH}h (Th:${mod.theoryHours}h Pr:${mod.practicalHours}h • ${weekly}h/wk)`;
+          }
+          tagsHtml += `<span class="mod-tag tag-hours">${hoursText}</span>`;
+        }
+
+        widget.innerHTML = `
+      <button type="button" class="mod-edit-btn" title="Edit Module">✏️ Edit</button>
+      <div class="mod-header">
+        <span class="mod-title">${escapeHtml(mod.title)}</span>
+      </div>
+      <div class="mod-code">${escapeHtml(mod.code)}</div>
+      ${tagsHtml ? `<div class="mod-tags">${tagsHtml}</div>` : ''}
+    `;
+
+        // Event Listeners for Widget
+        widget.addEventListener('dragstart', handleDragStart);
+        widget.addEventListener('dragend', handleDragEnd);
+
+        // Edit button & double click listener
+        const editBtn = widget.querySelector('.mod-edit-btn');
+        editBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openEditModal(mod.id);
+        });
+
+        widget.addEventListener('dblclick', () => {
+          openEditModal(mod.id);
+        });
+
+        return widget;
+      }
+
+      // Render Summary Rows (Calculations)
+      function renderSummaryRows(tbody) {
+        const maxTerms = getMaxTerms();
+
+        // 1. Total hrs/wk Row
+        const hrsTr = document.createElement('tr');
+        hrsTr.className = 'summary-row row-hours';
+
+        const hrsSidebar = document.createElement('td');
+        hrsSidebar.className = 'sidebar-label';
+        hrsSidebar.textContent = 'hrs/wk';
+        hrsTr.appendChild(hrsSidebar);
+
+        const threshold = plannerSettings.highHoursThreshold || 28;
+
+        // Calculate totals for each term (1 to maxTerms) split into Trade modules vs LFS + SW
+        for (let term = 1; term <= maxTerms; term++) {
+          const td = document.createElement('td');
+          td.className = 'hrs-breakdown-cell';
+
+          let tradeHours = 0;
+          let lfsSwHours = 0;
+
+          modules.forEach(m => {
+            const isActiveInTerm = (m.duration === 6)
+              ? (m.startTerm === term || m.startTerm === term - 1)
+              : (m.startTerm === term);
+
+            if (isActiveInTerm) {
+              const weekly = getWeeklyHours(m);
+              if (m.category === 'Life-skills' || m.category === 'Sports') {
+                lfsSwHours += weekly;
+              } else {
+                tradeHours += weekly;
+              }
+            }
+          });
+
+          const roundedTrade = Math.round(tradeHours * 10) / 10;
+          const roundedLfsSw = Math.round(lfsSwHours * 10) / 10;
+          const roundedTotal = Math.round((roundedTrade + roundedLfsSw) * 10) / 10;
+
+          const isHigh = roundedTotal > threshold;
+
+          td.innerHTML = `
+            <div class="hrs-breakdown-card">
+              <div class="hrs-line">
+                <span class="hrs-label">Trade module:</span>
+                <span class="hrs-val">${roundedTrade}</span>
+              </div>
+              <div class="hrs-line">
+                <span class="hrs-label">LFS + SW:</span>
+                <span class="hrs-val">${roundedLfsSw}</span>
+              </div>
+              <div class="hrs-total-line">
+                <span class="hrs-total-label">Total:</span>
+                <span class="total-hours-badge ${isHigh ? 'workload-high' : ''}">${roundedTotal}</span>
+              </div>
+            </div>
+          `;
+          hrsTr.appendChild(td);
+        }
+        tbody.appendChild(hrsTr);
+
+        // 2. Classes in campus Row (Editable per term for HF3, HF2, WSD, SCTP with Auto-Sum)
+        const classTr = document.createElement('tr');
+        classTr.className = 'summary-row row-classes';
+        const classSidebar = document.createElement('td');
+        classSidebar.className = 'sidebar-label';
+        classSidebar.textContent = 'classes in campus (HF3, HF2, WSD, SCTP)';
+        classTr.appendChild(classSidebar);
+
+        for (let term = 1; term <= maxTerms; term++) {
+          const td = document.createElement('td');
+          td.className = 'campus-class-cell';
+
+          const cData = campusClasses[term] || { hf3: 0, hf2: 0, wsd: 0, sctp: 0 };
+          const hf3Val = cData.hf3 !== undefined ? cData.hf3 : 0;
+          const hf2Val = cData.hf2 !== undefined ? cData.hf2 : 0;
+          const wsdVal = cData.wsd !== undefined ? cData.wsd : 0;
+          const sctpVal = cData.sctp !== undefined ? cData.sctp : 0;
+
+          const totalCount = Number(hf3Val) + Number(hf2Val) + Number(wsdVal) + Number(sctpVal);
+
+          td.innerHTML = `
+            <div class="campus-class-form">
+              <div class="campus-input-row">
+                <label>HF3:</label>
+                <input type="number" class="campus-input" data-term="${term}" data-field="hf3" value="${hf3Val}" min="0" max="99">
+              </div>
+              <div class="campus-input-row">
+                <label>HF2:</label>
+                <input type="number" class="campus-input" data-term="${term}" data-field="hf2" value="${hf2Val}" min="0" max="99">
+              </div>
+              <div class="campus-input-row">
+                <label>WSD:</label>
+                <input type="number" class="campus-input" data-term="${term}" data-field="wsd" value="${wsdVal}" min="0" max="99">
+              </div>
+              <div class="campus-input-row">
+                <label>SCTP:</label>
+                <input type="number" class="campus-input" data-term="${term}" data-field="sctp" value="${sctpVal}" min="0" max="99">
+              </div>
+              <div class="campus-total-line">
+                <strong>Total: <span id="campusTotalTerm_${term}">${totalCount}</span></strong>
+              </div>
+            </div>
+          `;
+
+          // Attach live change and input listeners for auto-sum and auto-save
+          td.querySelectorAll('.campus-input').forEach(input => {
+            input.addEventListener('change', handleCampusInputChange);
+            input.addEventListener('input', handleCampusInputChange);
+          });
+
+          classTr.appendChild(td);
+        }
+        tbody.appendChild(classTr);
+
+        // 3. Remark Row (User Editable Multiline per Term - Auto-expanding)
+        const remarkTr = document.createElement('tr');
+        remarkTr.className = 'summary-row row-remark';
+        const remarkSidebar = document.createElement('td');
+        remarkSidebar.className = 'sidebar-label';
+        remarkSidebar.textContent = 'Remark';
+        remarkTr.appendChild(remarkSidebar);
+
+        for (let term = 1; term <= maxTerms; term++) {
+          const td = document.createElement('td');
+          td.className = 'term-remark-cell';
+
+          const remarkVal = termRemarks[term] || '';
+          td.innerHTML = `<textarea class="term-remark-textarea" data-term="${term}" rows="1" placeholder="Add remark...">${escapeHtml(remarkVal)}</textarea>`;
+
+          const textareaEl = td.querySelector('.term-remark-textarea');
+          setTimeout(() => autoExpandTextarea(textareaEl), 0);
+
+          textareaEl.addEventListener('input', handleTermRemarkChange);
+          textareaEl.addEventListener('change', handleTermRemarkChange);
+
+          remarkTr.appendChild(td);
+        }
+        tbody.appendChild(remarkTr);
+      }
+
+      // --- Certification Requirements & Cumulative Credit Audit Engine ---
+
+      // Calculate cumulative scheduled credits up to a specific max term for a given category
+      function getScheduledCreditsUpToTerm(categoryKey, maxTerm) {
+        return modules
+          .filter(m => {
+            if (m.startTerm > maxTerm) return false;
+            if (categoryKey === 'Specialisation') {
+              return m.category === 'Specialisation' || m.category === 'Internship-3M' || m.category === 'Internship-6M';
+            }
+            return m.category === categoryKey;
+          })
+          .reduce((sum, m) => sum + (Number(m.credits) || 0), 0);
+      }
+
+      // Calculate total cumulative scheduled credits up to a specific max term across all categories
+      function getTotalScheduledCreditsUpToTerm(maxTerm) {
+        return modules
+          .filter(m => m.startTerm <= maxTerm)
+          .reduce((sum, m) => sum + (Number(m.credits) || 0), 0);
+      }
+
+      // Helper: Get count/presence of scheduled internships up to maxTerm
+      function getScheduledInternshipsUpToTerm(maxTerm) {
+        const activeInternships = modules.filter(m => {
+          if (m.startTerm > maxTerm) return false;
+          const is3M = m.category === 'Internship-3M' || (m.duration === 3 && m.title.toLowerCase().includes('internship'));
+          const is6M = m.category === 'Internship-6M' || (m.duration === 6 && m.title.toLowerCase().includes('internship'));
+          return is3M || is6M;
+        });
+
+        const has3M = activeInternships.some(m => m.category === 'Internship-3M' || m.duration === 3);
+        const has6M = activeInternships.some(m => m.category === 'Internship-6M' || m.duration === 6);
+
+        return {
+          has3M,
+          has6M,
+          any: activeInternships.length > 0,
+          list: activeInternships
+        };
+      }
+
+      function renderCertAuditTable() {
+        const tbody = document.getElementById('certAuditBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        const struct = String(plannerSettings.courseStructure || plannerSettings.courseDurationYears || '3');
+
+        const y1Input = document.getElementById('certNameY1Input');
+        const y2Input = document.getElementById('certNameY2Input');
+        const y3Input = document.getElementById('certNameY3Input');
+
+        if (y1Input) y1Input.value = certNames.y1 !== undefined ? certNames.y1 : DEFAULT_CERT_NAMES.y1;
+        if (y2Input) y2Input.value = certNames.y2 !== undefined ? certNames.y2 : DEFAULT_CERT_NAMES.y2;
+        if (y3Input) y3Input.value = certNames.y3 !== undefined ? certNames.y3 : DEFAULT_CERT_NAMES.y3;
+
+        const certThead = document.querySelector('.cert-audit-table thead');
+        if (certThead) {
+          if (struct === '2') {
+            certThead.innerHTML = `
+              <tr class="cert-th-group-row">
+                <th rowspan="2" class="cert-col-category">Module Category / Prerequisite</th>
+                <th colspan="3" class="cert-col-level level-y3">
+                  2-Year Higher Nitec Certification (End of Term 8)<br>
+                  <input type="text" id="certNameY3Input" class="cert-name-input"
+                    value="${escapeHtml(certNames.y3 || 'Higher Nitec in Software Development')}" placeholder="2-Year Certification Title">
+                </th>
+              </tr>
+              <tr class="cert-th-sub-row">
+                <th class="sub-th">Req Cr</th>
+                <th class="sub-th">Sched Cr</th>
+                <th class="sub-th">Audit</th>
+              </tr>
+            `;
+          } else if (struct === 'accelerated') {
+            certThead.innerHTML = `
+              <tr class="cert-th-group-row">
+                <th rowspan="2" class="cert-col-category">Module Category / Prerequisite</th>
+                <th colspan="3" class="cert-col-level level-y3">
+                  Accelerated Higher Nitec Certification (End of Term 9)<br>
+                  <input type="text" id="certNameY3Input" class="cert-name-input"
+                    value="${escapeHtml(certNames.y3 || 'Higher Nitec in Software Development (Accelerated)')}" placeholder="Accelerated Certification Title">
+                </th>
+              </tr>
+              <tr class="cert-th-sub-row">
+                <th class="sub-th">Req Cr</th>
+                <th class="sub-th">Sched Cr</th>
+                <th class="sub-th">Audit</th>
+              </tr>
+            `;
+          } else {
+            certThead.innerHTML = `
+              <tr class="cert-th-group-row">
+                <th rowspan="2" class="cert-col-category">Module Category / Prerequisite</th>
+                <th colspan="3" class="cert-col-level level-y1">
+                  Year 1 Certification (End of Term 4)<br>
+                  <input type="text" id="certNameY1Input" class="cert-name-input"
+                    value="${escapeHtml(certNames.y1 || 'Certificate in Infocomm Technology')}" placeholder="Year 1 Certification Title">
+                </th>
+                <th colspan="3" class="cert-col-level level-y2">
+                  Year 2 Certification (End of Term 8)<br>
+                  <input type="text" id="certNameY2Input" class="cert-name-input"
+                    value="${escapeHtml(certNames.y2 || 'Nitec in Infocomm Technology')}" placeholder="Year 2 Certification Title">
+                </th>
+                <th colspan="3" class="cert-col-level level-y3">
+                  Year 3 Certification (End of Term 12)<br>
+                  <input type="text" id="certNameY3Input" class="cert-name-input"
+                    value="${escapeHtml(certNames.y3 || 'Higher Nitec in Software Development')}" placeholder="Year 3 Certification Title">
+                </th>
+              </tr>
+              <tr class="cert-th-sub-row">
+                <th class="sub-th">Req Cr</th>
+                <th class="sub-th">Sched Cr</th>
+                <th class="sub-th">Audit</th>
+                <th class="sub-th">Req Cr</th>
+                <th class="sub-th">Sched Cr</th>
+                <th class="sub-th">Audit</th>
+                <th class="sub-th">Req Cr</th>
+                <th class="sub-th">Sched Cr</th>
+                <th class="sub-th">Audit</th>
+              </tr>
+            `;
+          }
+
+          // Re-attach cert title input listeners
+          document.querySelectorAll('.cert-name-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+              const id = e.target.id;
+              let key = 'y3';
+              if (id === 'certNameY1Input') key = 'y1';
+              if (id === 'certNameY2Input') key = 'y2';
+              certNames[key] = e.target.value;
+              saveLocalState();
+            });
+          });
+        }
+
+        const categories = [
+          { key: 'Foundation', label: 'Sector Foundation Modules' },
+          { key: 'Core', label: 'Cluster Core Modules' },
+          { key: 'Specialisation', label: 'Specialisation Modules (incl. Internship)' },
+          { key: 'Life-skills', label: 'LifeSkills Modules' },
+          { key: 'Sports', label: 'Sports & Wellness Modules' },
+          { key: 'CDC', label: 'Cross Disciplinary Core Modules' },
+          { key: 'Elective', label: 'Electives' }
+        ];
+
+        let yearFulfilledStatus = { y1: true, y2: true, y3: true };
+
+        let auditColumns = [
+          { year: 'y1', maxTerm: 4 },
+          { year: 'y2', maxTerm: 8 },
+          { year: 'y3', maxTerm: 12 }
+        ];
+
+        if (struct === '2') {
+          auditColumns = [{ year: 'y3', maxTerm: 8 }];
+        } else if (struct === 'accelerated') {
+          auditColumns = [{ year: 'y3', maxTerm: 9 }];
+        }
+
+        // 1. Category Credit Requirements Rows
+        categories.forEach(cat => {
+          const tr = document.createElement('tr');
+
+          const labelTd = document.createElement('td');
+          labelTd.className = 'cert-cat-name';
+          labelTd.textContent = cat.label;
+          tr.appendChild(labelTd);
+
+          const reqConf = certRequirements[cat.key] || { y1: 0, y2: 0, y3: 0 };
+
+          auditColumns.forEach(yearConf => {
+            const reqCr = Number(reqConf[yearConf.year]) || 0;
+            const schedCr = getScheduledCreditsUpToTerm(cat.key, yearConf.maxTerm);
+            const isFulfilled = schedCr >= reqCr;
+
+            if (!isFulfilled) {
+              yearFulfilledStatus[yearConf.year] = false;
+            }
+
+            // Editable Req Cr input
+            const reqTd = document.createElement('td');
+            reqTd.innerHTML = `<input type="number" class="req-cr-input" data-cat="${cat.key}" data-year="${yearConf.year}" value="${reqCr}" min="0">`;
+            tr.appendChild(reqTd);
+
+            // Sched Cr cell
+            const schedTd = document.createElement('td');
+            schedTd.textContent = schedCr;
+            tr.appendChild(schedTd);
+
+            // Audit Status Light cell
+            const statusTd = document.createElement('td');
+            if (isFulfilled) {
+              statusTd.innerHTML = `<span class="status-light-fulfilled" title="Requirement Met">🟢 ${schedCr}/${reqCr}</span>`;
+            } else {
+              const diff = reqCr - schedCr;
+              statusTd.innerHTML = `<span class="status-light-deficit" title="Credit Deficit">🔴 -${diff} Cr</span>`;
+            }
+            tr.appendChild(statusTd);
+          });
+
+          tbody.appendChild(tr);
+        });
+
+        // 2. Internship Completion Prerequisite Row
+        const internTr = document.createElement('tr');
+        internTr.className = 'cert-prereq-row';
+        const internLabelTd = document.createElement('td');
+        internLabelTd.className = 'cert-cat-name';
+        internLabelTd.style.fontWeight = '700';
+        internLabelTd.innerHTML = `⭐ Internship Completion Prerequisite`;
+        internTr.appendChild(internLabelTd);
+
+        const internReqConf = certRequirements.internship || { y1: 'None', y2: '3M', y3: 'Both' };
+
+        auditColumns.forEach(yearConf => {
+          const requiredType = internReqConf[yearConf.year] || (struct === '2' || struct === 'accelerated' ? '3M' : 'None');
+          const scheduledInterns = getScheduledInternshipsUpToTerm(yearConf.maxTerm);
+
+          let isInternFulfilled = true;
+          let statusText = '';
+
+          if (requiredType === 'None') {
+            isInternFulfilled = true;
+            statusText = '🟢 N/A (Optional)';
+          } else if (requiredType === '3M') {
+            isInternFulfilled = scheduledInterns.has3M || scheduledInterns.has6M;
+            statusText = isInternFulfilled ? (scheduledInterns.has6M ? '🟢 6M Internship' : '🟢 3M Internship') : '🔴 Missing 3M Internship';
+          } else if (requiredType === '6M') {
+            isInternFulfilled = scheduledInterns.has6M;
+            statusText = isInternFulfilled ? '🟢 6M Internship' : '🔴 Missing 6M Internship';
+          } else if (requiredType === 'Both') {
+            const missing3M = !scheduledInterns.has3M;
+            const missing6M = !scheduledInterns.has6M;
+            if (!missing3M && !missing6M) {
+              isInternFulfilled = true;
+              statusText = '🟢 Both (3M & 6M)';
+            } else {
+              isInternFulfilled = false;
+              if (missing3M && missing6M) statusText = '🔴 Missing 3M & 6M Intern';
+              else if (missing3M) statusText = '🔴 Missing 3M Intern';
+              else statusText = '🔴 Missing 6M Intern';
+            }
+          }
+
+          if (!isInternFulfilled) {
+            yearFulfilledStatus[yearConf.year] = false;
+          }
+
+          const reqTd = document.createElement('td');
+          reqTd.innerHTML = `
+            <select class="req-intern-select" data-year="${yearConf.year}">
+              <option value="None" ${requiredType === 'None' ? 'selected' : ''}>None</option>
+              <option value="3M" ${requiredType === '3M' ? 'selected' : ''}>3M Intern</option>
+              <option value="6M" ${requiredType === '6M' ? 'selected' : ''}>6M Intern</option>
+              <option value="Both" ${requiredType === 'Both' ? 'selected' : ''}>Both (3M & 6M)</option>
+            </select>
+          `;
+          internTr.appendChild(reqTd);
+
+          const schedTd = document.createElement('td');
+          schedTd.style.fontSize = '0.775rem';
+          schedTd.style.fontWeight = '600';
+          if (scheduledInterns.has3M && scheduledInterns.has6M) schedTd.textContent = '3M + 6M Intern';
+          else if (scheduledInterns.has6M) schedTd.textContent = '1x 6M Intern';
+          else if (scheduledInterns.has3M) schedTd.textContent = '1x 3M Intern';
+          else schedTd.textContent = 'None';
+          internTr.appendChild(schedTd);
+
+          const statusTd = document.createElement('td');
+          statusTd.innerHTML = `<span class="${isInternFulfilled ? 'status-light-fulfilled' : 'status-light-deficit'}">${statusText}</span>`;
+          internTr.appendChild(statusTd);
+        });
+
+        tbody.appendChild(internTr);
+
+        // 3. Total Credits Required / Scheduled Summary Row
+        const totalTr = document.createElement('tr');
+        totalTr.className = 'cert-total-row';
+
+        const totalLabelTd = document.createElement('td');
+        totalLabelTd.textContent = 'Total credits required for certification';
+        totalTr.appendChild(totalLabelTd);
+
+        auditColumns.forEach(yearConf => {
+          const totalReq = categories.reduce((sum, c) => sum + (Number((certRequirements[c.key] || {})[yearConf.year]) || 0), 0);
+          const totalSched = getTotalScheduledCreditsUpToTerm(yearConf.maxTerm);
+          const totalFulfilled = totalSched >= totalReq;
+
+          if (!totalFulfilled) {
+            yearFulfilledStatus[yearConf.year] = false;
+          }
+
+          const reqTotalTd = document.createElement('td');
+          reqTotalTd.textContent = totalReq;
+          totalTr.appendChild(reqTotalTd);
+
+          const schedTotalTd = document.createElement('td');
+          schedTotalTd.textContent = totalSched;
+          totalTr.appendChild(schedTotalTd);
+
+          const statusTotalTd = document.createElement('td');
+          if (totalFulfilled) {
+            statusTotalTd.innerHTML = `<span class="status-light-fulfilled">🟢 ${totalSched}/${totalReq}</span>`;
+          } else {
+            const diff = totalReq - totalSched;
+            statusTotalTd.innerHTML = `<span class="status-light-deficit">🔴 -${diff} Cr</span>`;
+          }
+          totalTr.appendChild(statusTotalTd);
+        });
+
+        tbody.appendChild(totalTr);
+
+        // Re-attach input change listeners for requirement inputs
+        document.querySelectorAll('.req-cr-input').forEach(input => {
+          input.addEventListener('change', handleReqCrChange);
+          input.addEventListener('input', handleReqCrChange);
+        });
+
+        document.querySelectorAll('.req-intern-select').forEach(select => {
+          select.addEventListener('change', handleReqInternChange);
+        });
+
+        // Update Header Status Badges
+        const badgeY1 = document.getElementById('certBadgeLevel1');
+        const badgeY2 = document.getElementById('certBadgeLevel2');
+        const badgeY3 = document.getElementById('certBadgeLevel3');
+
+        if (struct === '2') {
+          if (badgeY1) badgeY1.style.display = 'none';
+          if (badgeY2) badgeY2.style.display = 'none';
+          if (badgeY3) {
+            badgeY3.style.display = 'inline-flex';
+            badgeY3.className = `cert-badge ${yearFulfilledStatus.y3 ? 'badge-fulfilled' : 'badge-deficit'}`;
+            badgeY3.innerHTML = yearFulfilledStatus.y3 ? '🟢 2-Year Higher Nitec Cert: Audit Ready' : '🔴 2-Year Higher Nitec Cert: Ineligible / Deficit';
+          }
+        } else if (struct === 'accelerated') {
+          if (badgeY1) badgeY1.style.display = 'none';
+          if (badgeY2) badgeY2.style.display = 'none';
+          if (badgeY3) {
+            badgeY3.style.display = 'inline-flex';
+            badgeY3.className = `cert-badge ${yearFulfilledStatus.y3 ? 'badge-fulfilled' : 'badge-deficit'}`;
+            badgeY3.innerHTML = yearFulfilledStatus.y3 ? '🟢 Accelerated Higher Nitec Cert: Audit Ready' : '🔴 Accelerated Higher Nitec Cert: Ineligible / Deficit';
+          }
+        } else {
+          if (badgeY1) {
+            badgeY1.style.display = 'inline-flex';
+            badgeY1.className = `cert-badge ${yearFulfilledStatus.y1 ? 'badge-fulfilled' : 'badge-deficit'}`;
+            badgeY1.innerHTML = yearFulfilledStatus.y1 ? '🟢 Year 1 Cert: Audit Ready' : '🔴 Year 1 Cert: Ineligible / Deficit';
+          }
+          if (badgeY2) {
+            badgeY2.style.display = 'inline-flex';
+            badgeY2.className = `cert-badge ${yearFulfilledStatus.y2 ? 'badge-fulfilled' : 'badge-deficit'}`;
+            badgeY2.innerHTML = yearFulfilledStatus.y2 ? '🟢 Year 2 Cert: Audit Ready' : '🔴 Year 2 Cert: Ineligible / Deficit';
+          }
+          if (badgeY3) {
+            badgeY3.style.display = 'inline-flex';
+            badgeY3.className = `cert-badge ${yearFulfilledStatus.y3 ? 'badge-fulfilled' : 'badge-deficit'}`;
+            badgeY3.innerHTML = yearFulfilledStatus.y3 ? '🟢 Year 3 Cert: Audit Ready' : '🔴 Year 3 Cert: Ineligible / Deficit';
+          }
+        }
+      }
+
+      function handleReqCrChange(e) {
+        const catKey = e.target.dataset.cat;
+        const yearKey = e.target.dataset.year;
+        const newVal = parseInt(e.target.value, 10) || 0;
+
+        if (certRequirements[catKey]) {
+          certRequirements[catKey][yearKey] = newVal;
+          saveLocalState();
+          renderCertAuditTable();
+        }
+      }
+
+      function handleReqInternChange(e) {
+        const yearKey = e.target.dataset.year;
+        const newVal = e.target.value;
+
+        if (!certRequirements.internship) {
+          certRequirements.internship = { key: 'internship', label: 'Internship Completion Prerequisite', y1: 'None', y2: '3M', y3: 'Both' };
+        }
+        certRequirements.internship[yearKey] = newVal;
+        saveLocalState();
+        renderCertAuditTable();
+      }
+
+      // Drag and Drop Event Handlers with Strict Row Snapping
+      let draggedModuleId = null;
+
+      function handleDragStart(e) {
+        draggedModuleId = this.dataset.id;
+        this.classList.add('dragging');
+        e.dataTransfer.setData('text/plain', draggedModuleId);
+        e.dataTransfer.effectAllowed = 'move';
+      }
+
+      function handleDragEnd(e) {
+        this.classList.remove('dragging');
+        document.querySelectorAll('.term-slot').forEach(slot => slot.classList.remove('drag-over'));
+      }
+
+      function handleDragOver(e) {
+        if (!draggedModuleId) return;
+        const mod = modules.find(m => m.id === draggedModuleId);
+        if (!mod) return;
+
+        const designatedRow = getDesignatedRowKey(mod);
+        const targetRowKey = this.dataset.rowKey;
+
+        if (targetRowKey === designatedRow) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          this.classList.add('drag-over');
+        } else {
+          e.dataTransfer.dropEffect = 'none';
+        }
+      }
+
+      function handleDragLeave() {
+        this.classList.remove('drag-over');
+      }
+
+      function handleDrop(e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+
+        const modId = e.dataTransfer.getData('text/plain') || draggedModuleId;
+        if (!modId) return;
+
+        const mod = modules.find(m => m.id === modId);
+        if (!mod) return;
+
+        const designatedRow = getDesignatedRowKey(mod);
+        const targetRowKey = this.dataset.rowKey;
+
+        if (targetRowKey !== designatedRow) {
+          return;
+        }
+
+        const rawTargetTerm = parseInt(this.dataset.term, 10);
+        mod.startTerm = getValidStartTerm(rawTargetTerm, mod.duration);
+
+        saveLocalState();
+        renderMatrix();
+        renderCertAuditTable();
+      }
+
+      // --- Settings Modal & Live Controls ---
+      function openSettingsModal() {
+        document.getElementById('courseDurationYearsSelect').value = plannerSettings.courseStructure || plannerSettings.courseDurationYears || '3';
+
+        document.getElementById('sidebarWidthInput').value = plannerSettings.sidebarWidth || 220;
+        document.getElementById('sidebarWidthVal').textContent = `${plannerSettings.sidebarWidth || 220} px`;
+
+        document.getElementById('termColWidthInput').value = plannerSettings.termColWidth || 170;
+        document.getElementById('termColWidthVal').textContent = `${plannerSettings.termColWidth || 170} px`;
+
+        document.getElementById('modFontSizeInput').value = plannerSettings.modFontSize || 13.5;
+        document.getElementById('modFontSizeVal').textContent = `${plannerSettings.modFontSize || 13.5} px`;
+
+        document.getElementById('modPaddingInput').value = plannerSettings.modPadding || 8;
+        document.getElementById('modPaddingVal').textContent = `${plannerSettings.modPadding || 8} px`;
+
+        document.getElementById('modGapInput').value = plannerSettings.modGap || 6;
+        document.getElementById('modGapVal').textContent = `${plannerSettings.modGap || 6} px`;
+
+        document.getElementById('highHoursThresholdInput').value = plannerSettings.highHoursThreshold || 28;
+        document.getElementById('gridStyleSelect').value = plannerSettings.gridStyle || 'standard';
+
+        document.getElementById('durationDisplaySelect').value = plannerSettings.durationDisplay || 'detailed';
+        document.getElementById('creditsDisplaySelect').value = plannerSettings.creditsDisplay || 'show';
+        document.getElementById('hoursDisplaySelect').value = plannerSettings.hoursDisplay || 'detailed';
+        document.getElementById('allowVerticalPanSelect').value = plannerSettings.allowVerticalPan || 'disabled';
+
+        document.getElementById('modalStartMonthSelect').value = plannerSettings.startMonth !== undefined ? plannerSettings.startMonth : 0;
+        document.getElementById('modalStartYearInput').value = plannerSettings.startYear || 2027;
+
+        document.getElementById('plannerSettingsModal').classList.remove('hidden');
+      }
+
+      function closeSettingsModal() {
+        document.getElementById('plannerSettingsModal').classList.add('hidden');
+      }
+
+      function handleSettingsApply() {
+        const durationSelect = document.getElementById('courseDurationYearsSelect');
+        if (durationSelect) {
+          plannerSettings.courseStructure = durationSelect.value || '3';
+          plannerSettings.courseDurationYears = durationSelect.value || '3';
+        }
+
+        plannerSettings.sidebarWidth = parseInt(document.getElementById('sidebarWidthInput').value, 10) || 220;
+        plannerSettings.termColWidth = parseInt(document.getElementById('termColWidthInput').value, 10) || 170;
+        plannerSettings.modFontSize = parseFloat(document.getElementById('modFontSizeInput').value) || 13.5;
+        plannerSettings.modPadding = parseInt(document.getElementById('modPaddingInput').value, 10) || 8;
+        plannerSettings.modGap = parseInt(document.getElementById('modGapInput').value, 10) || 6;
+        plannerSettings.highHoursThreshold = parseInt(document.getElementById('highHoursThresholdInput').value, 10) || 28;
+        plannerSettings.gridStyle = document.getElementById('gridStyleSelect').value;
+
+        plannerSettings.durationDisplay = document.getElementById('durationDisplaySelect').value;
+        plannerSettings.creditsDisplay = document.getElementById('creditsDisplaySelect').value;
+        plannerSettings.hoursDisplay = document.getElementById('hoursDisplaySelect').value;
+        plannerSettings.allowVerticalPan = document.getElementById('allowVerticalPanSelect').value;
+
+        plannerSettings.startMonth = parseInt(document.getElementById('modalStartMonthSelect').value, 10) || 0;
+        plannerSettings.startYear = parseInt(document.getElementById('modalStartYearInput').value, 10) || 2027;
+
+        applyPlannerSettings();
+        saveLocalState();
+        renderTermHeaders();
+        renderMatrix();
+        renderCertAuditTable();
+        closeSettingsModal();
+      }
+
+      function handleSettingsReset() {
+        loadPresetDefaults();
+        applyPlannerSettings();
+        saveLocalState();
+        renderTermHeaders();
+        renderMatrix();
+        renderCertAuditTable();
+        openSettingsModal();
+      }
+
+      // Modal Form Updates & Helpers
+      function handleCategorySelectChange() {
+        const cat = document.getElementById('modCategory').value;
+        const durationSelect = document.getElementById('modDuration');
+
+        if (cat === 'Internship-3M') {
+          durationSelect.value = '3';
+        } else if (cat === 'Internship-6M') {
+          durationSelect.value = '6';
+        } else if (cat === 'Preparatory' && !currentEditingModuleId) {
+          document.getElementById('modCredits').value = 0;
+        }
+        updateModalDurationOptions();
+      }
+
+      function updateModalDurationOptions() {
+        const duration = parseInt(document.getElementById('modDuration').value, 10);
+        const th = Number(document.getElementById('modTheoryHours').value) || 0;
+        const pr = Number(document.getElementById('modPracticalHours').value) || 0;
+
+        const total = th + pr;
+        document.getElementById('modTotalHours').value = total;
+
+        const startTermSelect = document.getElementById('modStartTerm');
+        const hintEl = document.getElementById('weeklyRatePreview');
+
+        const weeks = duration === 6 ? 20 : 10;
+        const weekly = Math.round((total / weeks) * 10) / 10;
+        hintEl.textContent = `Calculated Total: ${total} hrs (Theory: ${th}h, Practical: ${pr}h) | Rate: ${weekly} hrs/wk (${weeks} weeks)`;
+
+        const maxTerms = getMaxTerms();
+        const currentSelectedVal = parseInt(startTermSelect.value, 10) || 1;
+
+        const struct = String(plannerSettings.courseStructure || plannerSettings.courseDurationYears || '3');
+
+        startTermSelect.innerHTML = '';
+        for (let termVal = 1; termVal <= maxTerms; termVal++) {
+          const opt = document.createElement('option');
+          opt.value = termVal;
+          const semNum = Math.ceil(termVal / 2);
+          const locked = is6mStartLocked(termVal, duration);
+          if (locked) {
+            opt.disabled = true;
+            if (struct === 'accelerated' && termVal >= 9) {
+              opt.textContent = `Term ${termVal} (Locked - 6M modules span 2 terms)`;
+            } else {
+              opt.textContent = `Term ${termVal} (Locked - Phase 1 6M modules start on Odd Terms)`;
+            }
+          } else {
+            opt.textContent = `Term ${termVal} (Sem ${semNum})`;
+          }
+          startTermSelect.appendChild(opt);
+        }
+
+        let targetVal = currentSelectedVal;
+        if (targetVal > maxTerms) targetVal = 1;
+        targetVal = getValidStartTerm(targetVal, duration);
+        startTermSelect.value = targetVal;
+      }
+
+      function openAddModal() {
+        currentEditingModuleId = null;
+        document.getElementById('modalTitle').textContent = 'Add Teaching Module Widget';
+        document.getElementById('moduleForm').reset();
+        document.getElementById('moduleId').value = '';
+        document.getElementById('modTheoryHours').value = 20;
+        document.getElementById('modPracticalHours').value = 20;
+        document.getElementById('modCredits').value = 4;
+        document.getElementById('deleteModBtn').style.display = 'none';
+
+        updateModalDurationOptions();
+        document.getElementById('moduleModal').classList.remove('hidden');
+      }
+
+      function openEditModal(id) {
+        const mod = modules.find(m => m.id === id);
+        if (!mod) return;
+
+        currentEditingModuleId = id;
+        document.getElementById('modalTitle').textContent = 'Edit Teaching Module Widget';
+        document.getElementById('moduleId').value = mod.id;
+        document.getElementById('modCode').value = mod.code;
+        document.getElementById('modTitle').value = mod.title;
+        document.getElementById('modCategory').value = mod.category;
+        document.getElementById('modType').value = mod.type;
+        document.getElementById('modDuration').value = mod.duration;
+        document.getElementById('modCredits').value = mod.credits !== undefined ? mod.credits : 4;
+        document.getElementById('modTheoryHours').value = mod.theoryHours !== undefined ? mod.theoryHours : 20;
+        document.getElementById('modPracticalHours').value = mod.practicalHours !== undefined ? mod.practicalHours : 20;
+        document.getElementById('modStartTerm').value = getValidStartTerm(mod.startTerm, mod.duration);
+
+        updateModalDurationOptions();
+        document.getElementById('deleteModBtn').style.display = 'block';
+        document.getElementById('moduleModal').classList.remove('hidden');
+      }
+
+      function closeModal() {
+        document.getElementById('moduleModal').classList.add('hidden');
+      }
+
+      function handleFormSubmit(e) {
+        e.preventDefault();
+
+        const id = document.getElementById('moduleId').value || 'm_' + Date.now();
+        const code = document.getElementById('modCode').value.trim();
+        const title = document.getElementById('modTitle').value.trim();
+        const category = document.getElementById('modCategory').value;
+        const type = document.getElementById('modType').value;
+        const credits = parseInt(document.getElementById('modCredits').value, 10) || 0;
+        const duration = parseInt(document.getElementById('modDuration').value, 10);
+        const theoryHours = parseInt(document.getElementById('modTheoryHours').value, 10) || 0;
+        const practicalHours = parseInt(document.getElementById('modPracticalHours').value, 10) || 0;
+        const totalHours = theoryHours + practicalHours;
+
+        const rawStartTerm = parseInt(document.getElementById('modStartTerm').value, 10);
+        const validStartTerm = getValidStartTerm(rawStartTerm, duration);
+
+        const updatedModule = {
+          id,
+          code,
+          title,
+          category,
+          type,
+          credits,
+          duration,
+          theoryHours,
+          practicalHours,
+          totalHours,
+          startTerm: validStartTerm
+        };
+
+        if (currentEditingModuleId) {
+          const idx = modules.findIndex(m => m.id === currentEditingModuleId);
+          if (idx !== -1) modules[idx] = updatedModule;
+        } else {
+          modules.push(updatedModule);
+        }
+
+        saveLocalState();
+        renderMatrix();
+        renderCertAuditTable();
+        closeModal();
+      }
+
+      function deleteCurrentModule() {
+        if (!currentEditingModuleId) return;
+        if (confirm('Are you sure you want to delete this module widget?')) {
+          modules = modules.filter(m => m.id !== currentEditingModuleId);
+          saveLocalState();
+          renderMatrix();
+          renderCertAuditTable();
+          closeModal();
+        }
+      }
+
+      // Setup Event Listeners
+      function setupEventListeners() {
+        // Multi-Course Tab Actions
+        document.getElementById('addCourseTabBtn').addEventListener('click', openAddTabModal);
+        document.getElementById('tabModalCloseBtn').addEventListener('click', closeAddTabModal);
+        document.getElementById('cancelTabModalBtn').addEventListener('click', closeAddTabModal);
+        document.getElementById('addCourseTabForm').addEventListener('submit', handleAddTabSubmit);
+
+        // Header Toolbar Actions
+        document.getElementById('addModuleBtn').addEventListener('click', openAddModal);
+        document.getElementById('plannerSettingsBtn').addEventListener('click', openSettingsModal);
+
+        document.getElementById('resetScheduleBtn').addEventListener('click', () => {
+          if (confirm('Reset active schedule tab to default Software Development preset? Custom changes in this tab will be overwritten.')) {
+            loadPresetDefaults();
+            applyPlannerSettings();
+            renderTermHeaders();
+            renderMatrix();
+            renderCertAuditTable();
+            saveLocalState();
+          }
+        });
+
+        document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
+        document.getElementById('importJsonInput').addEventListener('change', importJson);
+
+        // About Modal Handlers
+        const aboutModal = document.getElementById('aboutModal');
+        document.getElementById('aboutBtn').addEventListener('click', () => {
+          aboutModal.classList.remove('hidden');
+        });
+        ['aboutModalCloseBtn', 'closeAboutModalBtn'].forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) {
+            btn.addEventListener('click', () => {
+              aboutModal.classList.add('hidden');
+            });
+          }
+        });
+
+        // Settings Modal Range Slider Live Preview Badges & CSS Property Updates
+        document.getElementById('sidebarWidthInput').addEventListener('input', (e) => {
+          const val = e.target.value;
+          document.getElementById('sidebarWidthVal').textContent = `${val} px`;
+          document.documentElement.style.setProperty('--sidebar-col-width', `${val}px`);
+        });
+
+        document.getElementById('termColWidthInput').addEventListener('input', (e) => {
+          const val = e.target.value;
+          document.getElementById('termColWidthVal').textContent = `${val} px`;
+          document.documentElement.style.setProperty('--term-col-width', `${val}px`);
+        });
+
+        document.getElementById('modFontSizeInput').addEventListener('input', (e) => {
+          const val = e.target.value;
+          document.getElementById('modFontSizeVal').textContent = `${val} px`;
+          document.documentElement.style.setProperty('--mod-font-size', `${val / 16}rem`);
+        });
+
+        document.getElementById('modPaddingInput').addEventListener('input', (e) => {
+          const val = parseInt(e.target.value, 10);
+          document.getElementById('modPaddingVal').textContent = `${val} px`;
+          document.documentElement.style.setProperty('--mod-padding-v', `${val}px`);
+          document.documentElement.style.setProperty('--mod-padding-h', `${Math.min(val + 2, 16)}px`);
+        });
+
+        document.getElementById('modGapInput').addEventListener('input', (e) => {
+          const val = e.target.value;
+          document.getElementById('modGapVal').textContent = `${val} px`;
+          document.documentElement.style.setProperty('--mod-margin-bottom', `${val}px`);
+        });
+
+        ['durationDisplaySelect', 'creditsDisplaySelect', 'hoursDisplaySelect', 'allowVerticalPanSelect'].forEach(id => {
+          document.getElementById(id).addEventListener('change', (e) => {
+            if (id === 'durationDisplaySelect') plannerSettings.durationDisplay = e.target.value;
+            if (id === 'creditsDisplaySelect') plannerSettings.creditsDisplay = e.target.value;
+            if (id === 'hoursDisplaySelect') plannerSettings.hoursDisplay = e.target.value;
+            if (id === 'allowVerticalPanSelect') plannerSettings.allowVerticalPan = e.target.value;
+            renderMatrix();
+          });
+        });
+
+        document.getElementById('settingsModalCloseBtn').addEventListener('click', closeSettingsModal);
+        document.getElementById('cancelSettingsBtn').addEventListener('click', closeSettingsModal);
+        document.getElementById('applySettingsBtn').addEventListener('click', handleSettingsApply);
+        document.getElementById('resetSettingsBtn').addEventListener('click', handleSettingsReset);
+
+        // Metadata input auto-save & Term Start Date live updates
+        ['effectDateInput', 'courseTitleInput', 'collegeInput'].forEach(id => {
+          document.getElementById(id).addEventListener('change', saveLocalState);
+          document.getElementById(id).addEventListener('input', () => {
+            const activeCourse = courses.find(c => c.id === activeCourseId);
+            if (activeCourse && activeCourse.data && activeCourse.data.metadata) {
+              activeCourse.data.metadata.courseTitle = document.getElementById('courseTitleInput').value.trim();
+            }
+            saveLocalState();
+          });
+        });
+
+        document.getElementById('startMonthSelect').addEventListener('change', (e) => {
+          plannerSettings.startMonth = parseInt(e.target.value, 10);
+          saveLocalState();
+          renderTermHeaders();
+        });
+
+        document.getElementById('startYearInput').addEventListener('change', (e) => {
+          plannerSettings.startYear = parseInt(e.target.value, 10) || 2027;
+          saveLocalState();
+          renderTermHeaders();
+        });
+
+        document.getElementById('startYearInput').addEventListener('input', (e) => {
+          const val = parseInt(e.target.value, 10);
+          if (val && val >= 2000 && val <= 2099) {
+            plannerSettings.startYear = val;
+            saveLocalState();
+            renderTermHeaders();
+          }
+        });
+
+        // Certification Names auto-save listeners
+        ['certNameY1Input', 'certNameY2Input', 'certNameY3Input'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            const key = id === 'certNameY1Input' ? 'y1' : (id === 'certNameY2Input' ? 'y2' : 'y3');
+            el.addEventListener('input', (e) => {
+              certNames[key] = e.target.value;
+              saveLocalState();
+            });
+            el.addEventListener('change', (e) => {
+              certNames[key] = e.target.value;
+              saveLocalState();
+            });
+          }
+        });
+
+        // Theme Toggle
+        document.getElementById('themeToggleBtn').addEventListener('click', () => {
+          document.body.classList.toggle('theme-dark');
+          const isDark = document.body.classList.contains('theme-dark');
+          document.querySelector('.theme-icon').textContent = isDark ? '☀️' : '🌙';
+        });
+
+        // Form inputs change listeners for live calculations & auto duration selection
+        document.getElementById('modCategory').addEventListener('change', handleCategorySelectChange);
+        document.getElementById('modDuration').addEventListener('change', updateModalDurationOptions);
+        document.getElementById('modTheoryHours').addEventListener('input', updateModalDurationOptions);
+        document.getElementById('modPracticalHours').addEventListener('input', updateModalDurationOptions);
+
+        // Modal Actions
+        document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+        document.getElementById('cancelModBtn').addEventListener('click', closeModal);
+        document.getElementById('moduleForm').addEventListener('submit', handleFormSubmit);
+        document.getElementById('deleteModBtn').addEventListener('click', deleteCurrentModule);
+
+        // Setup Click-and-Drag Mouse Panning
+        setupPanAndScroll();
+      }
+
+      // Canvas / Table Click-and-Drag Mouse Panning (Left/Right & Up/Down Drag Scrolling)
+      function setupPanAndScroll() {
+        const wrapper = document.querySelector('.table-scroll-wrapper');
+        if (!wrapper) return;
+
+        let isPanning = false;
+        let startX = 0;
+        let startY = 0;
+        let scrollLeftStart = 0;
+        let scrollTopStart = 0;
+
+        wrapper.addEventListener('mousedown', (e) => {
+          // Allow panning when clicking on empty cell, grid background, or table headers
+          if (e.button !== 0) return; // Left mouse click only
+
+          // Do NOT start panning if clicking on a module widget or interactive form controls
+          if (
+            e.target.closest('.module-widget') ||
+            e.target.closest('input') ||
+            e.target.closest('select') ||
+            e.target.closest('button') ||
+            e.target.closest('a')
+          ) {
+            return;
+          }
+
+          isPanning = true;
+          startX = e.clientX;
+          startY = e.clientY;
+          scrollLeftStart = wrapper.scrollLeft;
+          scrollTopStart = window.scrollY || document.documentElement.scrollTop;
+
+          wrapper.classList.add('panning');
+          document.body.style.userSelect = 'none';
+          document.body.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+          if (!isPanning) return;
+
+          const deltaX = e.clientX - startX;
+
+          // Smooth horizontal panning (table scroll left/right)
+          wrapper.scrollLeft = scrollLeftStart - deltaX;
+
+          // Vertical up/down panning is disabled by default to prevent accidental page movement and dizziness
+          if (plannerSettings.allowVerticalPan === 'enabled') {
+            const deltaY = e.clientY - startY;
+            window.scrollTo({
+              top: scrollTopStart - deltaY,
+              behavior: 'instant'
+            });
+          }
+        });
+
+        function stopPanning() {
+          if (!isPanning) return;
+          isPanning = false;
+          wrapper.classList.remove('panning');
+          document.body.style.userSelect = '';
+          document.body.style.cursor = '';
+        }
+
+        window.addEventListener('mouseup', stopPanning);
+        window.addEventListener('mouseleave', stopPanning);
+      }
+
+      // Timestamp helper for filename: YYYYMMDD_HHMMSS
+      function getTimestampSuffix() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        return `${year}${month}${day}_${hours}${minutes}${seconds}`;
+      }
+
+      // Robust Blob-based JSON Export with timestamp filename
+      function exportJson() {
+        syncCurrentToActiveCourse();
+        const payload = {
+          version: '3.0',
+          exportedAt: new Date().toISOString(),
+          activeCourseId: activeCourseId,
+          courses: courses
+        };
+
+        const jsonString = JSON.stringify(payload, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+
+        const timestamp = getTimestampSuffix();
+        const activeCourse = courses.find(c => c.id === activeCourseId);
+        const sanitizeName = (activeCourse ? activeCourse.name : 'workspace').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+        //const filename = `multi_course_planner_${sanitizeName}_${timestamp}.json`;
+        const filename = `multi_course_planner_${timestamp}.json`;
+
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.href = url;
+        downloadAnchor.download = filename;
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      // Module Normalizer & Sanitizer Helper
+      function normalizeModule(m) {
+        if (!m) return null;
+        const th = Number(m.theoryHours) || 0;
+        const pr = Number(m.practicalHours) || 0;
+        const tot = (m.totalHours !== undefined && m.totalHours !== null) ? Number(m.totalHours) : (th + pr);
+        return {
+          id: m.id || ('m_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5)),
+          code: String(m.code || '').trim(),
+          title: String(m.title || 'Untitled Module').trim(),
+          category: m.category || 'Foundation',
+          type: m.type || 'General',
+          credits: m.credits !== undefined && m.credits !== null ? Number(m.credits) : 0,
+          duration: Number(m.duration) === 6 ? 6 : 3,
+          theoryHours: th,
+          practicalHours: pr,
+          totalHours: tot,
+          startTerm: Number(m.startTerm) || 1
+        };
+      }
+
+      // Robust JSON Import
+      function importJson(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const importedData = JSON.parse(event.target.result);
+
+            if (importedData && Array.isArray(importedData.courses) && importedData.courses.length > 0) {
+              // Multi-course workspace format v3.0
+              courses = importedData.courses.map(c => {
+                const tabData = c.data || {};
+                return {
+                  id: c.id || ('course_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5)),
+                  name: c.name || (tabData.metadata && tabData.metadata.courseTitle) || "Course Tab",
+                  data: {
+                    version: '3.0',
+                    exportedAt: tabData.exportedAt || new Date().toISOString(),
+                    metadata: Object.assign({ effectDate: 'With effect from Jan 2027', courseTitle: 'Higher Nitec in Software Development', college: 'College West' }, tabData.metadata),
+                    plannerSettings: Object.assign({}, DEFAULT_PLANNER_SETTINGS, tabData.plannerSettings),
+                    certRequirements: Object.assign({}, DEFAULT_CERT_REQUIREMENTS, tabData.certRequirements),
+                    certNames: Object.assign({}, DEFAULT_CERT_NAMES, tabData.certNames),
+                    campusClasses: Object.assign({}, DEFAULT_CAMPUS_CLASSES, tabData.campusClasses),
+                    termRemarks: Object.assign({}, DEFAULT_TERM_REMARKS, tabData.termRemarks),
+                    modules: (tabData.modules || []).map(normalizeModule).filter(Boolean)
+                  }
+                };
+              });
+              activeCourseId = importedData.activeCourseId && courses.some(c => c.id === importedData.activeCourseId) ? importedData.activeCourseId : courses[0].id;
+            } else if (Array.isArray(importedData) || (importedData && Array.isArray(importedData.modules))) {
+              // Single course format v2.0 or v1.0 -> load as new tab
+              const loadedModules = Array.isArray(importedData) ? importedData : importedData.modules;
+              const courseTitle = (importedData.metadata && importedData.metadata.courseTitle) || "Imported Course Schedule";
+              const tabName = importedData.tabName || importedData.name || courseTitle;
+
+              const singleData = {
+                version: '3.0',
+                metadata: importedData.metadata || { effectDate: 'With effect from Jan 2027', courseTitle: courseTitle, college: 'College West' },
+                plannerSettings: Object.assign({}, DEFAULT_PLANNER_SETTINGS, importedData.plannerSettings),
+                certRequirements: Object.assign({}, DEFAULT_CERT_REQUIREMENTS, importedData.certRequirements),
+                certNames: Object.assign({}, DEFAULT_CERT_NAMES, importedData.certNames),
+                campusClasses: Object.assign({}, DEFAULT_CAMPUS_CLASSES, importedData.campusClasses),
+                termRemarks: Object.assign({}, DEFAULT_TERM_REMARKS, importedData.termRemarks),
+                modules: loadedModules.map(normalizeModule).filter(Boolean)
+              };
+
+              const newId = 'course_' + Date.now();
+              const newCourse = {
+                id: newId,
+                name: tabName,
+                data: singleData
+              };
+
+              courses.push(newCourse);
+              activeCourseId = newId;
+            } else {
+              alert('Invalid JSON structure.');
+              return;
+            }
+
+            loadActiveCourseToWorkspace();
+            applyPlannerSettings();
+            renderTermHeaders();
+            renderMatrix();
+            renderCertAuditTable();
+            renderCourseTabs();
+            saveLocalState();
+
+            alert('Course Schedule & Workspace successfully imported!');
+          } catch (err) {
+            alert('Error parsing JSON file: ' + err.message);
+          }
+          e.target.value = '';
+        };
+        reader.readAsText(file);
+      }
+
+      // Utility Helper
+      function escapeHtml(str) {
+        return str.replace(/[&<>"']/g, function (m) {
+          return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+          }[m];
+        });
+      }
+
+      // Run App
+      init();
+    });
+  </script>
+</body>
+
+</html>
