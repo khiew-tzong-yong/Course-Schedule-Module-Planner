@@ -879,6 +879,8 @@
     }
 
     .course-tabs-list {
+      flex: 1;
+      min-width: 0;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -1522,10 +1524,261 @@
     .modal-footer {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
       gap: 10px;
       margin-top: 10px;
       padding-top: 14px;
       border-top: 1px solid var(--border-color);
+    }
+
+    /* Type A Overall Snapshot Modal & Schedule Table */
+    .type-a-modal-card {
+      max-width: 95vw !important;
+      width: 1350px !important;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .type-a-summary-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .type-a-stat-card {
+      background-color: var(--bg-table-header);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .type-a-stat-card .stat-label {
+      font-size: 0.725rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .type-a-stat-card .stat-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary-accent);
+    }
+
+    .type-a-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .type-a-search-input {
+      padding: 7px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      width: 240px;
+    }
+
+    .type-a-select-filter {
+      padding: 7px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+    }
+
+    .type-a-table-container {
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 52vh;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background-color: var(--bg-card);
+    }
+
+    .type-a-snapshot-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.825rem;
+    }
+
+    .type-a-snapshot-table th,
+    .type-a-snapshot-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .type-a-snapshot-table th {
+      position: sticky;
+      top: 0;
+      background-color: var(--bg-table-header);
+      z-index: 10;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    .type-a-snapshot-table th.sticky-col,
+    .type-a-snapshot-table td.sticky-col {
+      position: sticky;
+      background-color: var(--bg-card);
+      z-index: 5;
+    }
+
+    .type-a-snapshot-table th.sticky-col {
+      z-index: 15;
+      background-color: var(--bg-table-header);
+    }
+
+    .type-a-snapshot-table th.sticky-col-1,
+    .type-a-snapshot-table td.sticky-col-1 {
+      left: 0;
+      min-width: 110px;
+    }
+
+    .type-a-snapshot-table th.sticky-col-2,
+    .type-a-snapshot-table td.sticky-col-2 {
+      left: 110px;
+      min-width: 220px;
+      max-width: 280px;
+      white-space: normal;
+    }
+
+    .type-a-snapshot-table th.term-header-col,
+    .type-a-snapshot-table td.term-cell {
+      min-width: 175px;
+      max-width: 220px;
+      white-space: normal;
+      text-align: center;
+      vertical-align: middle;
+      padding: 6px 8px;
+    }
+
+    .type-a-badge-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .type-a-course-badge {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      white-space: normal;
+      word-break: break-word;
+      padding: 5px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin: 0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      line-height: 1.3;
+    }
+
+    .type-a-course-badge.tab-color-indigo {
+      background-color: rgba(99, 102, 241, 0.15);
+      color: #4338ca;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .type-a-course-badge.tab-color-emerald {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: #047857;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .type-a-course-badge.tab-color-amber {
+      background-color: rgba(245, 158, 11, 0.15);
+      color: #b45309;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .type-a-course-badge.tab-color-rose {
+      background-color: rgba(244, 63, 94, 0.15);
+      color: #be123c;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+
+    .type-a-course-badge.tab-color-purple {
+      background-color: rgba(168, 85, 247, 0.15);
+      color: #6b21a8;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .type-a-course-badge.tab-color-teal {
+      background-color: rgba(20, 184, 166, 0.15);
+      color: #0f766e;
+      border: 1px solid rgba(20, 184, 166, 0.3);
+    }
+
+    .type-a-course-badge.tab-color-orange {
+      background-color: rgba(249, 115, 22, 0.15);
+      color: #c2410c;
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+
+    .type-a-course-badge.tab-color-violet {
+      background-color: rgba(139, 92, 246, 0.15);
+      color: #6d28d9;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .theme-dark .type-a-course-badge.tab-color-indigo {
+      background-color: rgba(99, 102, 241, 0.25);
+      color: #a5b4fc;
+    }
+
+    .theme-dark .type-a-course-badge.tab-color-emerald {
+      background-color: rgba(16, 185, 129, 0.25);
+      color: #6ee7b7;
+    }
+
+    .theme-dark .type-a-course-badge.tab-color-amber {
+      background-color: rgba(245, 158, 11, 0.25);
+      color: #fde047;
+    }
+
+    .theme-dark .type-a-course-badge.tab-color-rose {
+      background-color: rgba(244, 63, 94, 0.25);
+      color: #fda4af;
+    }
+
+    .theme-dark .type-a-course-badge.tab-color-purple {
+      background-color: rgba(168, 85, 247, 0.25);
+      color: #f0abfc;
+    }
+
+    .theme-dark .type-a-course-badge.tab-color-teal {
+      background-color: rgba(20, 184, 166, 0.25);
+      color: #5eead4;
+    }
+
+    .theme-dark .type-a-course-badge.tab-color-orange {
+      background-color: rgba(249, 115, 22, 0.25);
+      color: #fdba74;
+    }
+
+    .theme-dark .type-a-course-badge.tab-color-violet {
+      background-color: rgba(139, 92, 246, 0.25);
+      color: #c4b5fd;
     }
   </style>
 </head>
@@ -1589,13 +1842,28 @@
       <div class="course-tabs-list" id="courseTabsList">
         <!-- Rendered dynamically by JS -->
       </div>
-      <button id="addCourseTabBtn" class="btn btn-sm btn-outline add-tab-btn" title="Add New Course Plan Tab">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        New Course Tab
-      </button>
+      <div class="course-tabs-actions"
+        style="display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto;">
+        <button id="typeASnapshotBtn" class="btn btn-sm btn-primary type-a-snapshot-btn"
+          title="View Overall Examination (Type A) Modules Schedule Snapshot across all Course Tabs"
+          style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%); color: #ffffff; border: none; font-weight: 600; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.25);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Exam Paper Schedule
+        </button>
+        <button id="addCourseTabBtn" class="btn btn-sm btn-outline add-tab-btn" title="Add New Course Plan Tab">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          New Course Tab
+        </button>
+      </div>
     </div>
 
     <!-- Active Course Actions & Metadata Container (Just Above Schedule Table) -->
@@ -2188,6 +2456,104 @@
 
       <div class="modal-footer" style="padding-top: 12px; border-top: 1px solid var(--border-color);">
         <button type="button" id="closeAboutModalBtn" class="btn btn-primary" style="margin-left: auto;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overall Examination (Type A) Modules Snapshot Modal -->
+  <div id="typeASnapshotModal" class="modal-overlay hidden">
+    <div class="modal-card type-a-modal-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div
+            style="width: 36px; height: 36px; border-radius: 8px; background: rgba(79, 70, 229, 0.12); color: var(--primary-accent); display: flex; align-items: center; justify-content: center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <div>
+            <h3 class="modal-title" style="margin: 0; font-size: 1.15rem; font-weight: 700;">Overall Examination (Type
+              A) Modules Schedule Snapshot</h3>
+            <div class="field-hint" style="margin-top: 2px;">Consolidated view of Type A exam modules across all course
+              tabs, starting from the earliest course start date.</div>
+          </div>
+        </div>
+        <button type="button" id="closeTypeASnapshotModalBtn" class="btn-close">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 16px 20px; gap: 16px;">
+        <!-- Summary Cards -->
+        <div class="type-a-summary-bar">
+          <div class="type-a-stat-card">
+            <span class="stat-label">Unique Type A Modules</span>
+            <span class="stat-value" id="typeAStatTotalMods">0</span>
+          </div>
+          <div class="type-a-stat-card">
+            <span class="stat-label">Course Tabs Included</span>
+            <span class="stat-value" id="typeAStatTotalTabs">0</span>
+          </div>
+          <div class="type-a-stat-card">
+            <span class="stat-label">Earliest Course Term</span>
+            <span class="stat-value" id="typeAStatEarliestDate">-</span>
+          </div>
+          <div class="type-a-stat-card">
+            <span class="stat-label">Total Exam Module Instances</span>
+            <span class="stat-value" id="typeAStatTotalOfferings">0</span>
+          </div>
+        </div>
+
+        <!-- Toolbar & Filters -->
+        <div class="type-a-toolbar">
+          <div style="display: flex; gap: 10px; align-items: center; flex: 1; flex-wrap: wrap;">
+            <input type="text" id="typeASearchInput" placeholder="🔍 Search module code or name..."
+              class="type-a-search-input">
+            <select id="typeACategoryFilter" class="type-a-select-filter">
+              <option value="ALL">All Categories</option>
+              <option value="Foundation">Foundation</option>
+              <option value="Core">Core</option>
+              <option value="Specialisation">Specialisation</option>
+              <option value="CDC">CDC</option>
+              <option value="Elective">Elective</option>
+            </select>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button type="button" id="typeAExportCsvBtn" class="btn btn-sm btn-outline">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Export CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Schedule Table Container -->
+        <div class="type-a-table-container">
+          <table class="schedule-matrix type-a-snapshot-table" id="typeASnapshotTable">
+            <thead>
+              <tr id="typeATableHeaderRow">
+                <!-- Dynamically built by JS -->
+              </tr>
+            </thead>
+            <tbody id="typeATableBody">
+              <!-- Dynamically built by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer"
+        style="padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;">
+        <div
+          style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-muted); flex-wrap: wrap;"
+          id="typeALegendBar">
+          <!-- Dynamic course tab legend badges -->
+        </div>
+        <button type="button" id="closeTypeASnapshotFooterBtn" class="btn btn-outline">Close</button>
       </div>
     </div>
   </div>
@@ -4003,8 +4369,281 @@
         }
       }
 
+      // --- Type A Overall Snapshot Engine ---
+      let typeASnapshotCache = null;
+
+      function renderTypeASnapshotTable() {
+        syncCurrentToActiveCourse();
+
+        let minStartAbs = Infinity;
+        let maxEndAbs = -Infinity;
+
+        const coursesData = courses.map((course, idx) => {
+          const data = course.data || {};
+          const settings = data.plannerSettings || {};
+          const startMonth = Number(settings.startMonth) || 0;
+          const startYear = Number(settings.startYear) || 2027;
+          const struct = String(settings.courseStructure || settings.courseDurationYears || '3');
+          const maxTerms = struct === '2' ? 8 : (struct === 'accelerated' ? 9 : 12);
+
+          const startAbs = startYear * 12 + startMonth;
+          const endAbs = startAbs + (maxTerms * 3) - 1;
+
+          if (startAbs < minStartAbs) minStartAbs = startAbs;
+          if (endAbs > maxEndAbs) maxEndAbs = endAbs;
+
+          const tabColorClass = TAB_COLOR_SCHEMES[idx % TAB_COLOR_SCHEMES.length];
+          const typeAModules = (data.modules || []).filter(m => m && m.type === 'Type A');
+
+          return {
+            courseId: course.id,
+            courseName: course.name,
+            tabColorClass: tabColorClass,
+            startMonth: startMonth,
+            startYear: startYear,
+            maxTerms: maxTerms,
+            startAbs: startAbs,
+            typeAModules: typeAModules
+          };
+        });
+
+        if (minStartAbs === Infinity) minStartAbs = 2027 * 12;
+        if (maxEndAbs === -Infinity) maxEndAbs = (2027 + 3) * 12;
+
+        const remainder = minStartAbs % 3;
+        if (remainder !== 0) {
+          minStartAbs -= remainder;
+        }
+
+        const timelineColumns = [];
+        for (let abs = minStartAbs; abs <= maxEndAbs; abs += 3) {
+          const y = Math.floor(abs / 12);
+          const m = abs % 12;
+          timelineColumns.push({
+            key: `${y}-${String(m).padStart(2, '0')}`,
+            monthName: MONTH_NAMES[m],
+            year: y,
+            abs: abs,
+            label: `${MONTH_NAMES[m]} ${y}`
+          });
+        }
+
+        const moduleMap = new Map();
+        let totalOfferingsCount = 0;
+
+        coursesData.forEach(c => {
+          c.typeAModules.forEach(m => {
+            totalOfferingsCount++;
+            const normCode = (m.code || '').trim().toUpperCase();
+            const normTitle = (m.title || '').trim();
+            const groupKey = normCode || normTitle.toUpperCase();
+
+            if (!moduleMap.has(groupKey)) {
+              moduleMap.set(groupKey, {
+                code: m.code || '',
+                title: m.title || '',
+                category: m.category || 'Foundation',
+                credits: m.credits || 0,
+                theoryHours: m.theoryHours || 0,
+                practicalHours: m.practicalHours || 0,
+                totalHours: m.totalHours || 0,
+                occurrences: []
+              });
+            }
+
+            const entry = moduleMap.get(groupKey);
+            if (!entry.title && m.title) entry.title = m.title;
+            if (!entry.credits && m.credits) entry.credits = m.credits;
+
+            const completionTerm = m.startTerm + (m.duration === 6 ? 1 : 0);
+            const mCompletionAbs = c.startAbs + (completionTerm - 1) * 3;
+            const mYear = Math.floor(mCompletionAbs / 12);
+            const mMonth = mCompletionAbs % 12;
+            const mKey = `${mYear}-${String(mMonth).padStart(2, '0')}`;
+
+            entry.occurrences.push({
+              courseId: c.courseId,
+              courseName: c.courseName,
+              tabColorClass: c.tabColorClass,
+              startTerm: m.startTerm,
+              completionTerm: completionTerm,
+              duration: m.duration,
+              mCompletionAbs: mCompletionAbs,
+              periodKey: mKey
+            });
+          });
+        });
+
+        const consolidatedModules = Array.from(moduleMap.values());
+        consolidatedModules.sort((a, b) => {
+          if (a.code && b.code) return a.code.localeCompare(b.code);
+          return a.title.localeCompare(b.title);
+        });
+
+        document.getElementById('typeAStatTotalMods').textContent = consolidatedModules.length;
+        document.getElementById('typeAStatTotalTabs').textContent = courses.length;
+        const earliestCol = timelineColumns[0];
+        document.getElementById('typeAStatEarliestDate').textContent = earliestCol ? earliestCol.label : '-';
+        document.getElementById('typeAStatTotalOfferings').textContent = totalOfferingsCount;
+
+        const legendBar = document.getElementById('typeALegendBar');
+        if (legendBar) {
+          legendBar.innerHTML = '<span style="font-weight: 700;">Course Tabs:</span> ' + coursesData.map(c =>
+            `<span class="type-a-course-badge ${c.tabColorClass}">${escapeHtml(c.courseName)}</span>`
+          ).join(' ');
+        }
+
+        const headerRow = document.getElementById('typeATableHeaderRow');
+        if (headerRow) {
+          let headersHtml = `
+            <th class="sticky-col sticky-col-1">Module Code</th>
+            <th class="sticky-col sticky-col-2">Module Title</th>
+            <th style="min-width: 110px;">Category</th>
+            <th style="min-width: 60px;">Credits</th>
+            <th style="min-width: 60px;">Hours</th>
+          `;
+          timelineColumns.forEach(col => {
+            headersHtml += `<th class="term-header-col">${escapeHtml(col.label)}</th>`;
+          });
+          headerRow.innerHTML = headersHtml;
+        }
+
+        typeASnapshotCache = {
+          timelineColumns: timelineColumns,
+          consolidatedModules: consolidatedModules
+        };
+
+        applyTypeASnapshotFilters();
+      }
+
+      function applyTypeASnapshotFilters() {
+        if (!typeASnapshotCache) return;
+
+        const tbody = document.getElementById('typeATableBody');
+        if (!tbody) return;
+
+        const searchText = (document.getElementById('typeASearchInput').value || '').trim().toLowerCase();
+        const categoryFilter = document.getElementById('typeACategoryFilter').value;
+
+        const { timelineColumns, consolidatedModules } = typeASnapshotCache;
+
+        const filtered = consolidatedModules.filter(mod => {
+          if (categoryFilter !== 'ALL' && mod.category !== categoryFilter) return false;
+          if (searchText) {
+            const matchCode = (mod.code || '').toLowerCase().includes(searchText);
+            const matchTitle = (mod.title || '').toLowerCase().includes(searchText);
+            if (!matchCode && !matchTitle) return false;
+          }
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="${5 + timelineColumns.length}" style="text-align: center; padding: 24px; color: var(--text-muted);">No matching Type A examination modules found.</td></tr>`;
+          return;
+        }
+
+        let bodyHtml = '';
+        filtered.forEach(mod => {
+          bodyHtml += `<tr>`;
+          bodyHtml += `<td class="sticky-col sticky-col-1" style="font-weight: 700; color: var(--primary-accent);">${escapeHtml(mod.code || '-')}</td>`;
+          bodyHtml += `<td class="sticky-col sticky-col-2" style="font-weight: 600;">${escapeHtml(mod.title)}</td>`;
+          bodyHtml += `<td><span class="legend-badge type-a-badge" style="display: inline-block; vertical-align: middle; margin-right: 4px;"></span> ${escapeHtml(mod.category)}</td>`;
+          bodyHtml += `<td style="text-align: center; font-weight: 600;">${mod.credits}</td>`;
+          bodyHtml += `<td style="text-align: center; color: var(--text-muted);">${mod.totalHours} hrs</td>`;
+
+          timelineColumns.forEach(col => {
+            const matches = mod.occurrences.filter(occ => occ.periodKey === col.key);
+            if (matches.length > 0) {
+              bodyHtml += `<td class="term-cell"><div class="type-a-badge-stack">`;
+              matches.forEach(occ => {
+                const termLabel = occ.duration === 6 ? `T${occ.startTerm}-T${occ.completionTerm} Exam` : `T${occ.completionTerm} Exam`;
+                const tooltip = occ.duration === 6
+                  ? `${escapeHtml(occ.courseName)} • Spans Term ${occ.startTerm} to Term ${occ.completionTerm} (Exam in 2nd Term)`
+                  : `${escapeHtml(occ.courseName)} • Term ${occ.completionTerm} Exam`;
+                bodyHtml += `<span class="type-a-course-badge ${occ.tabColorClass}" title="${tooltip}">${escapeHtml(occ.courseName)} (${termLabel})</span>`;
+              });
+              bodyHtml += `</div></td>`;
+            } else {
+              bodyHtml += `<td class="term-cell" style="color: var(--text-muted); opacity: 0.3;">-</td>`;
+            }
+          });
+
+          bodyHtml += `</tr>`;
+        });
+
+        tbody.innerHTML = bodyHtml;
+      }
+
+      function openTypeASnapshotModal() {
+        renderTypeASnapshotTable();
+        const modal = document.getElementById('typeASnapshotModal');
+        if (modal) modal.classList.remove('hidden');
+      }
+
+      function closeTypeASnapshotModal() {
+        const modal = document.getElementById('typeASnapshotModal');
+        if (modal) modal.classList.add('hidden');
+      }
+
+      function exportTypeACsv() {
+        if (!typeASnapshotCache) return;
+        const { timelineColumns, consolidatedModules } = typeASnapshotCache;
+
+        let csvContent = "Module Code,Module Title,Category,Credits,Total Hours";
+        timelineColumns.forEach(col => {
+          csvContent += `,"${col.label}"`;
+        });
+        csvContent += "\n";
+
+        consolidatedModules.forEach(mod => {
+          csvContent += `"${(mod.code || '').replace(/"/g, '""')}","${(mod.title || '').replace(/"/g, '""')}","${mod.category}",${mod.credits},${mod.totalHours}`;
+          timelineColumns.forEach(col => {
+            const matches = mod.occurrences.filter(occ => occ.periodKey === col.key);
+            if (matches.length > 0) {
+              const val = matches.map(m => `${m.courseName} (${m.duration === 6 ? 'T' + m.startTerm + '-T' + m.completionTerm : 'T' + m.completionTerm} Exam)`).join('; ');
+              csvContent += `,"${val.replace(/"/g, '""')}"`;
+            } else {
+              csvContent += `,"-"`;
+            }
+          });
+          csvContent += "\n";
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.href = url;
+        downloadAnchor.download = `type_a_examination_snapshot_${getTimestampSuffix()}.csv`;
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
       // Setup Event Listeners
       function setupEventListeners() {
+        // Type A Overall Snapshot Modal Actions
+        const typeAModal = document.getElementById('typeASnapshotModal');
+        document.getElementById('typeASnapshotBtn').addEventListener('click', openTypeASnapshotModal);
+        document.getElementById('closeTypeASnapshotModalBtn').addEventListener('click', closeTypeASnapshotModal);
+        document.getElementById('closeTypeASnapshotFooterBtn').addEventListener('click', closeTypeASnapshotModal);
+        document.getElementById('typeASearchInput').addEventListener('input', applyTypeASnapshotFilters);
+        document.getElementById('typeACategoryFilter').addEventListener('change', applyTypeASnapshotFilters);
+        document.getElementById('typeAExportCsvBtn').addEventListener('click', exportTypeACsv);
+
+        if (typeAModal) {
+          typeAModal.addEventListener('click', (e) => {
+            if (e.target === typeAModal) {
+              closeTypeASnapshotModal();
+            }
+          });
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !typeAModal.classList.contains('hidden')) {
+              closeTypeASnapshotModal();
+            }
+          });
+        }
+
         // Multi-Course Tab Actions
         document.getElementById('addCourseTabBtn').addEventListener('click', openAddTabModal);
         document.getElementById('tabModalCloseBtn').addEventListener('click', closeAddTabModal);
