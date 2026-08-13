@@ -901,7 +901,7 @@
       background-color: var(--bg-main);
       color: var(--text-secondary);
       border: 1px solid var(--border-color);
-      cursor: pointer;
+      cursor: grab;
       white-space: nowrap;
       transition: all 0.2s ease;
       user-select: none;
@@ -909,6 +909,22 @@
 
     .course-tab-item:hover {
       filter: brightness(0.96);
+    }
+
+    .course-tab-item.dragging {
+      opacity: 0.45;
+      transform: scale(0.96);
+      cursor: grabbing;
+    }
+
+    .course-tab-item.drag-over-left {
+      border-left: 4px solid var(--primary-accent) !important;
+      transform: translateX(3px);
+    }
+
+    .course-tab-item.drag-over-right {
+      border-right: 4px solid var(--primary-accent) !important;
+      transform: translateX(-3px);
     }
 
     /* Pastel & Light Color Palette for Course Tabs (8-color repeating loop) */
@@ -1776,9 +1792,49 @@
       color: #fdba74;
     }
 
-    .theme-dark .type-a-course-badge.tab-color-violet {
-      background-color: rgba(139, 92, 246, 0.25);
-      color: #c4b5fd;
+    /* Selective Import/Export Course List */
+    .selective-course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 4px 2px;
+    }
+
+    .selective-course-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background-color: var(--bg-card);
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+      cursor: pointer;
+    }
+
+    .selective-course-item:hover {
+      background-color: var(--bg-table-header);
+      border-color: var(--primary-accent);
+    }
+
+    .selective-course-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: var(--primary-accent);
+    }
+
+    .selective-course-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .selective-course-meta {
+      font-size: 0.775rem;
+      color: var(--text-muted);
     }
   </style>
 </head>
@@ -2558,6 +2614,122 @@
     </div>
   </div>
 
+  <!-- Selective Export Modal -->
+  <div id="exportModal" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(37, 99, 235, 0.1); color: var(--primary-accent); display: flex; align-items: center; justify-content: center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </div>
+          <div>
+            <h3 class="modal-title" style="margin: 0; font-size: 1.1rem;">Export Course Plans & Workspace</h3>
+            <div class="field-hint" style="margin-top: 2px;">Select which course tabs to include in the exported JSON file.</div>
+          </div>
+        </div>
+        <button type="button" id="closeExportModalBtn" class="btn-close">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 16px 20px; gap: 14px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid var(--border-color);">
+          <span style="font-weight: 700; font-size: 0.85rem; color: var(--text-primary);">Course Plans to Export</span>
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--primary-accent); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <input type="checkbox" id="exportSelectAllCheckbox" checked> Select All
+          </label>
+        </div>
+
+        <div class="selective-course-list" id="exportCourseList">
+          <!-- Dynamically populated checkbox list -->
+        </div>
+
+        <div class="field-hint" style="font-size: 0.775rem;">
+          💡 Exporting multiple courses creates a v3.0 Workspace JSON bundle. Exporting a single course creates a standalone JSON.
+        </div>
+      </div>
+
+      <div class="modal-footer" style="padding: 12px 20px;">
+        <button type="button" id="cancelExportBtn" class="btn btn-outline">Cancel</button>
+        <button type="button" id="confirmExportBtn" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Export Selected JSON
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selective Import Preview Modal -->
+  <div id="importModal" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width: 580px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); color: #059669; display: flex; align-items: center; justify-content: center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <div>
+            <h3 class="modal-title" style="margin: 0; font-size: 1.1rem;">Import Course Plans & Workspace</h3>
+            <div class="field-hint" style="margin-top: 2px;">Preview and choose which courses to import into your workspace.</div>
+          </div>
+        </div>
+        <button type="button" id="closeImportModalBtn" class="btn-close">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 16px 20px; gap: 14px;">
+        <div style="background-color: var(--bg-table-header); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px 14px; font-size: 0.825rem; display: flex; flex-direction: column; gap: 4px;">
+          <div>📁 <strong id="importFileNameText">File.json</strong></div>
+          <div style="color: var(--text-muted); font-size: 0.775rem;" id="importMetaSummaryText">Detected 0 course plan(s).</div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid var(--border-color);">
+          <span style="font-weight: 700; font-size: 0.85rem; color: var(--text-primary);">Select Courses to Import</span>
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--primary-accent); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <input type="checkbox" id="importSelectAllCheckbox" checked> Select All
+          </label>
+        </div>
+
+        <div class="selective-course-list" id="importCourseList">
+          <!-- Dynamically populated checkbox list -->
+        </div>
+
+        <div class="form-group" style="margin-top: 4px;">
+          <label style="font-size: 0.825rem; font-weight: 700; color: var(--text-secondary);">Import Action Mode</label>
+          <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer;">
+              <input type="radio" name="importMode" value="append" checked>
+              <span><strong>Append/Add to existing workspace</strong> (Keeps current tabs and adds imported courses)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer;">
+              <input type="radio" name="importMode" value="replace">
+              <span><strong>Replace current workspace</strong> (Clears current tabs and loads selected courses)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="padding: 12px 20px;">
+        <button type="button" id="cancelImportBtn" class="btn btn-outline">Cancel</button>
+        <button type="button" id="confirmImportBtn" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Import Selected Courses
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     /**
      * Course Schedule & Teaching Module Planner Engine
@@ -2987,6 +3159,71 @@
           titleSpan.textContent = course.name;
           titleSpan.title = `${course.name} (Double-click to rename)`;
           tabEl.appendChild(titleSpan);
+
+          // HTML5 Drag and Drop Tab Reordering
+          tabEl.draggable = true;
+
+          tabEl.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', course.id);
+            e.dataTransfer.effectAllowed = 'move';
+            tabEl.classList.add('dragging');
+          });
+
+          tabEl.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            const rect = tabEl.getBoundingClientRect();
+            const midpoint = rect.left + rect.width / 2;
+            if (e.clientX < midpoint) {
+              tabEl.classList.add('drag-over-left');
+              tabEl.classList.remove('drag-over-right');
+            } else {
+              tabEl.classList.add('drag-over-right');
+              tabEl.classList.remove('drag-over-left');
+            }
+          });
+
+          tabEl.addEventListener('dragleave', () => {
+            tabEl.classList.remove('drag-over-left', 'drag-over-right');
+          });
+
+          tabEl.addEventListener('drop', (e) => {
+            e.preventDefault();
+            tabEl.classList.remove('drag-over-left', 'drag-over-right');
+
+            const draggedId = e.dataTransfer.getData('text/plain');
+            if (!draggedId || draggedId === course.id) return;
+
+            const fromIndex = courses.findIndex(c => c.id === draggedId);
+            let toIndex = courses.findIndex(c => c.id === course.id);
+
+            if (fromIndex === -1 || toIndex === -1) return;
+
+            const rect = tabEl.getBoundingClientRect();
+            const midpoint = rect.left + rect.width / 2;
+            const dropOnRight = e.clientX >= midpoint;
+
+            // Remove dragged item
+            const [movedCourse] = courses.splice(fromIndex, 1);
+
+            // Re-calculate target index after removal
+            let targetIndex = courses.findIndex(c => c.id === course.id);
+            if (dropOnRight) {
+              targetIndex += 1;
+            }
+
+            courses.splice(targetIndex, 0, movedCourse);
+
+            renderCourseTabs();
+            saveLocalState();
+          });
+
+          tabEl.addEventListener('dragend', () => {
+            document.querySelectorAll('.course-tab-item').forEach(el => {
+              el.classList.remove('dragging', 'drag-over-left', 'drag-over-right');
+            });
+          });
 
           // Inline rename on double click
           tabEl.addEventListener('dblclick', (e) => {
@@ -4665,8 +4902,30 @@
           }
         });
 
-        document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
-        document.getElementById('importJsonInput').addEventListener('change', importJson);
+        // Selective Export & Import Modal Handlers
+        document.getElementById('exportJsonBtn').addEventListener('click', openExportModal);
+        document.getElementById('closeExportModalBtn').addEventListener('click', closeExportModal);
+        document.getElementById('cancelExportBtn').addEventListener('click', closeExportModal);
+        document.getElementById('confirmExportBtn').addEventListener('click', executeExportJson);
+
+        const exportSelectAll = document.getElementById('exportSelectAllCheckbox');
+        if (exportSelectAll) {
+          exportSelectAll.addEventListener('change', (e) => {
+            document.querySelectorAll('.export-course-cb').forEach(cb => cb.checked = e.target.checked);
+          });
+        }
+
+        document.getElementById('importJsonInput').addEventListener('change', handleFileSelect);
+        document.getElementById('closeImportModalBtn').addEventListener('click', closeImportModal);
+        document.getElementById('cancelImportBtn').addEventListener('click', closeImportModal);
+        document.getElementById('confirmImportBtn').addEventListener('click', executeImportJson);
+
+        const importSelectAll = document.getElementById('importSelectAllCheckbox');
+        if (importSelectAll) {
+          importSelectAll.addEventListener('change', (e) => {
+            document.querySelectorAll('.import-course-cb').forEach(cb => cb.checked = e.target.checked);
+          });
+        }
 
         // About Modal Handlers
         const aboutModal = document.getElementById('aboutModal');
@@ -4880,25 +5139,86 @@
         return `${year}${month}${day}_${hours}${minutes}${seconds}`;
       }
 
-      // Robust Blob-based JSON Export with timestamp filename
-      function exportJson() {
+      // State cache for pending import file payload
+      let pendingImportPayload = null;
+
+      // --- SELECTIVE EXPORT MODAL SYSTEM ---
+      function openExportModal() {
         syncCurrentToActiveCourse();
-        const payload = {
-          version: '3.0',
-          exportedAt: new Date().toISOString(),
-          activeCourseId: activeCourseId,
-          courses: courses
-        };
+        const exportModal = document.getElementById('exportModal');
+        const container = document.getElementById('exportCourseList');
+        const selectAllCb = document.getElementById('exportSelectAllCheckbox');
+
+        if (!exportModal || !container) return;
+
+        container.innerHTML = '';
+        if (selectAllCb) selectAllCb.checked = true;
+
+        courses.forEach((course) => {
+          const modCount = (course.data && course.data.modules) ? course.data.modules.length : 0;
+          const struct = course.data && course.data.plannerSettings ? (course.data.plannerSettings.courseStructure || course.data.plannerSettings.courseDurationYears || '3') : '3';
+          const termLabel = struct === '2' ? '8 Terms' : (struct === 'accelerated' ? '9 Terms' : '12 Terms');
+
+          const item = document.createElement('label');
+          item.className = 'selective-course-item';
+          item.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox" class="export-course-cb" value="${course.id}" checked>
+              <div>
+                <div class="selective-course-title">${escapeHtml(course.name)}</div>
+                <div class="selective-course-meta">${termLabel} • ${modCount} module(s)</div>
+              </div>
+            </div>
+          `;
+          container.appendChild(item);
+        });
+
+        exportModal.classList.remove('hidden');
+      }
+
+      function closeExportModal() {
+        const exportModal = document.getElementById('exportModal');
+        if (exportModal) exportModal.classList.add('hidden');
+      }
+
+      function executeExportJson() {
+        const checkedCbs = Array.from(document.querySelectorAll('.export-course-cb:checked'));
+        if (checkedCbs.length === 0) {
+          alert('Please select at least one course tab to export.');
+          return;
+        }
+
+        const selectedIds = checkedCbs.map(cb => cb.value);
+        const selectedCourses = courses.filter(c => selectedIds.includes(c.id));
+
+        let payload;
+        if (selectedCourses.length === 1) {
+          const singleCourse = selectedCourses[0];
+          payload = {
+            version: '3.0',
+            exportedAt: new Date().toISOString(),
+            activeCourseId: singleCourse.id,
+            courses: [singleCourse]
+          };
+        } else {
+          payload = {
+            version: '3.0',
+            exportedAt: new Date().toISOString(),
+            activeCourseId: selectedIds.includes(activeCourseId) ? activeCourseId : selectedIds[0],
+            courses: selectedCourses
+          };
+        }
 
         const jsonString = JSON.stringify(payload, null, 2);
         const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
 
         const timestamp = getTimestampSuffix();
-        const activeCourse = courses.find(c => c.id === activeCourseId);
-        const sanitizeName = (activeCourse ? activeCourse.name : 'workspace').toLowerCase().replace(/[^a-z0-9]+/g, '_');
-        //const filename = `multi_course_planner_${sanitizeName}_${timestamp}.json`;
-        const filename = `multi_course_planner_${timestamp}.json`;
+        const firstCourse = selectedCourses[0];
+        const sanitizeName = selectedCourses.length === 1
+          ? firstCourse.name.toLowerCase().replace(/[^a-z0-9]+/g, '_')
+          : 'workspace';
+        const filename = `multi_course_planner_${sanitizeName}_${timestamp}.json`;
 
         const downloadAnchor = document.createElement('a');
         downloadAnchor.href = url;
@@ -4907,6 +5227,166 @@
         downloadAnchor.click();
         downloadAnchor.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+        closeExportModal();
+      }
+
+      // --- SELECTIVE IMPORT PREVIEW MODAL SYSTEM ---
+      function handleFileSelect(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const importedData = JSON.parse(event.target.result);
+            let parsedCourses = [];
+
+            if (importedData && Array.isArray(importedData.courses) && importedData.courses.length > 0) {
+              parsedCourses = importedData.courses.map(c => {
+                const tabData = c.data || {};
+                return {
+                  id: c.id || ('course_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5)),
+                  name: c.name || (tabData.metadata && tabData.metadata.courseTitle) || "Course Tab",
+                  data: {
+                    version: '3.0',
+                    exportedAt: tabData.exportedAt || new Date().toISOString(),
+                    metadata: Object.assign({ effectDate: 'With effect from Jan 2027', courseTitle: 'Higher Nitec in Software Development', college: 'College West' }, tabData.metadata),
+                    plannerSettings: Object.assign({}, DEFAULT_PLANNER_SETTINGS, tabData.plannerSettings),
+                    certRequirements: Object.assign({}, DEFAULT_CERT_REQUIREMENTS, tabData.certRequirements),
+                    certNames: Object.assign({}, DEFAULT_CERT_NAMES, tabData.certNames),
+                    campusClasses: Object.assign({}, DEFAULT_CAMPUS_CLASSES, tabData.campusClasses),
+                    termRemarks: Object.assign({}, DEFAULT_TERM_REMARKS, tabData.termRemarks),
+                    modules: (tabData.modules || []).map(normalizeModule).filter(Boolean)
+                  }
+                };
+              });
+            } else if (Array.isArray(importedData) || (importedData && Array.isArray(importedData.modules))) {
+              const loadedModules = Array.isArray(importedData) ? importedData : importedData.modules;
+              const courseTitle = (importedData.metadata && importedData.metadata.courseTitle) || "Imported Course Schedule";
+              const tabName = importedData.tabName || importedData.name || courseTitle;
+
+              parsedCourses = [{
+                id: 'course_' + Date.now(),
+                name: tabName,
+                data: {
+                  version: '3.0',
+                  metadata: importedData.metadata || { effectDate: 'With effect from Jan 2027', courseTitle: courseTitle, college: 'College West' },
+                  plannerSettings: Object.assign({}, DEFAULT_PLANNER_SETTINGS, importedData.plannerSettings),
+                  certRequirements: Object.assign({}, DEFAULT_CERT_REQUIREMENTS, importedData.certRequirements),
+                  certNames: Object.assign({}, DEFAULT_CERT_NAMES, importedData.certNames),
+                  campusClasses: Object.assign({}, DEFAULT_CAMPUS_CLASSES, importedData.campusClasses),
+                  termRemarks: Object.assign({}, DEFAULT_TERM_REMARKS, importedData.termRemarks),
+                  modules: loadedModules.map(normalizeModule).filter(Boolean)
+                }
+              }];
+            } else {
+              alert('Invalid JSON structure. Could not find course modules.');
+              return;
+            }
+
+            pendingImportPayload = {
+              fileName: file.name,
+              courses: parsedCourses
+            };
+
+            openImportModal();
+          } catch (err) {
+            alert('Error parsing JSON file: ' + err.message);
+          }
+          e.target.value = '';
+        };
+        reader.readAsText(file);
+      }
+
+      function openImportModal() {
+        if (!pendingImportPayload) return;
+        const importModal = document.getElementById('importModal');
+        const container = document.getElementById('importCourseList');
+        const selectAllCb = document.getElementById('importSelectAllCheckbox');
+        const fileNameEl = document.getElementById('importFileNameText');
+        const metaSummaryEl = document.getElementById('importMetaSummaryText');
+
+        if (!importModal || !container) return;
+
+        fileNameEl.textContent = pendingImportPayload.fileName;
+        metaSummaryEl.textContent = `Detected ${pendingImportPayload.courses.length} course plan(s) in JSON file.`;
+
+        container.innerHTML = '';
+        if (selectAllCb) selectAllCb.checked = true;
+
+        pendingImportPayload.courses.forEach((course, index) => {
+          const modCount = (course.data && course.data.modules) ? course.data.modules.length : 0;
+          const struct = course.data && course.data.plannerSettings ? (course.data.plannerSettings.courseStructure || course.data.plannerSettings.courseDurationYears || '3') : '3';
+          const termLabel = struct === '2' ? '8 Terms' : (struct === 'accelerated' ? '9 Terms' : '12 Terms');
+
+          const item = document.createElement('label');
+          item.className = 'selective-course-item';
+          item.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox" class="import-course-cb" value="${index}" checked>
+              <div>
+                <div class="selective-course-title">${escapeHtml(course.name)}</div>
+                <div class="selective-course-meta">${termLabel} • ${modCount} module(s)</div>
+              </div>
+            </div>
+          `;
+          container.appendChild(item);
+        });
+
+        importModal.classList.remove('hidden');
+      }
+
+      function closeImportModal() {
+        const importModal = document.getElementById('importModal');
+        if (importModal) importModal.classList.add('hidden');
+        pendingImportPayload = null;
+      }
+
+      function executeImportJson() {
+        if (!pendingImportPayload) return;
+
+        const checkedCbs = Array.from(document.querySelectorAll('.import-course-cb:checked'));
+        if (checkedCbs.length === 0) {
+          alert('Please select at least one course to import.');
+          return;
+        }
+
+        const selectedIndices = checkedCbs.map(cb => parseInt(cb.value, 10));
+        const selectedImportCourses = selectedIndices.map(idx => pendingImportPayload.courses[idx]);
+
+        const modeEl = document.querySelector('input[name="importMode"]:checked');
+        const importMode = modeEl ? modeEl.value : 'append';
+
+        if (importMode === 'replace') {
+          courses = selectedImportCourses;
+          activeCourseId = courses[0].id;
+        } else {
+          syncCurrentToActiveCourse();
+          const newlyAddedIds = [];
+          selectedImportCourses.forEach(c => {
+            let uniqueId = c.id;
+            if (courses.some(existing => existing.id === uniqueId)) {
+              uniqueId = 'course_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+            }
+            const copy = JSON.parse(JSON.stringify(c));
+            copy.id = uniqueId;
+            courses.push(copy);
+            newlyAddedIds.push(uniqueId);
+          });
+          activeCourseId = newlyAddedIds[0];
+        }
+
+        loadActiveCourseToWorkspace();
+        applyPlannerSettings();
+        renderTermHeaders();
+        renderMatrix();
+        renderCertAuditTable();
+        renderCourseTabs();
+        saveLocalState();
+
+        closeImportModal();
+        alert(`Successfully imported ${selectedImportCourses.length} course plan(s)!`);
       }
 
       // Module Normalizer & Sanitizer Helper
@@ -4928,85 +5408,6 @@
           totalHours: tot,
           startTerm: Number(m.startTerm) || 1
         };
-      }
-
-      // Robust JSON Import
-      function importJson(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          try {
-            const importedData = JSON.parse(event.target.result);
-
-            if (importedData && Array.isArray(importedData.courses) && importedData.courses.length > 0) {
-              // Multi-course workspace format v3.0
-              courses = importedData.courses.map(c => {
-                const tabData = c.data || {};
-                return {
-                  id: c.id || ('course_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5)),
-                  name: c.name || (tabData.metadata && tabData.metadata.courseTitle) || "Course Tab",
-                  data: {
-                    version: '3.0',
-                    exportedAt: tabData.exportedAt || new Date().toISOString(),
-                    metadata: Object.assign({ effectDate: 'With effect from Jan 2027', courseTitle: 'Higher Nitec in Software Development', college: 'College West' }, tabData.metadata),
-                    plannerSettings: Object.assign({}, DEFAULT_PLANNER_SETTINGS, tabData.plannerSettings),
-                    certRequirements: Object.assign({}, DEFAULT_CERT_REQUIREMENTS, tabData.certRequirements),
-                    certNames: Object.assign({}, DEFAULT_CERT_NAMES, tabData.certNames),
-                    campusClasses: Object.assign({}, DEFAULT_CAMPUS_CLASSES, tabData.campusClasses),
-                    termRemarks: Object.assign({}, DEFAULT_TERM_REMARKS, tabData.termRemarks),
-                    modules: (tabData.modules || []).map(normalizeModule).filter(Boolean)
-                  }
-                };
-              });
-              activeCourseId = importedData.activeCourseId && courses.some(c => c.id === importedData.activeCourseId) ? importedData.activeCourseId : courses[0].id;
-            } else if (Array.isArray(importedData) || (importedData && Array.isArray(importedData.modules))) {
-              // Single course format v2.0 or v1.0 -> load as new tab
-              const loadedModules = Array.isArray(importedData) ? importedData : importedData.modules;
-              const courseTitle = (importedData.metadata && importedData.metadata.courseTitle) || "Imported Course Schedule";
-              const tabName = importedData.tabName || importedData.name || courseTitle;
-
-              const singleData = {
-                version: '3.0',
-                metadata: importedData.metadata || { effectDate: 'With effect from Jan 2027', courseTitle: courseTitle, college: 'College West' },
-                plannerSettings: Object.assign({}, DEFAULT_PLANNER_SETTINGS, importedData.plannerSettings),
-                certRequirements: Object.assign({}, DEFAULT_CERT_REQUIREMENTS, importedData.certRequirements),
-                certNames: Object.assign({}, DEFAULT_CERT_NAMES, importedData.certNames),
-                campusClasses: Object.assign({}, DEFAULT_CAMPUS_CLASSES, importedData.campusClasses),
-                termRemarks: Object.assign({}, DEFAULT_TERM_REMARKS, importedData.termRemarks),
-                modules: loadedModules.map(normalizeModule).filter(Boolean)
-              };
-
-              const newId = 'course_' + Date.now();
-              const newCourse = {
-                id: newId,
-                name: tabName,
-                data: singleData
-              };
-
-              courses.push(newCourse);
-              activeCourseId = newId;
-            } else {
-              alert('Invalid JSON structure.');
-              return;
-            }
-
-            loadActiveCourseToWorkspace();
-            applyPlannerSettings();
-            renderTermHeaders();
-            renderMatrix();
-            renderCertAuditTable();
-            renderCourseTabs();
-            saveLocalState();
-
-            alert('Course Schedule & Workspace successfully imported!');
-          } catch (err) {
-            alert('Error parsing JSON file: ' + err.message);
-          }
-          e.target.value = '';
-        };
-        reader.readAsText(file);
       }
 
       // Utility Helper
