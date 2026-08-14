@@ -389,12 +389,41 @@
       cursor: grabbing !important;
     }
 
+    .main-zoom-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      font-size: 0.825rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .main-zoom-control input[type="range"] {
+      width: 95px;
+      accent-color: var(--primary-accent);
+      cursor: pointer;
+    }
+
+    .main-zoom-control #mainTableZoomVal {
+      font-weight: 700;
+      width: 38px;
+      text-align: right;
+      color: var(--primary-accent);
+    }
+
     .schedule-matrix {
       width: calc(var(--sidebar-col-width) + (var(--max-terms, 12) * var(--term-col-width)));
       border-collapse: separate;
       border-spacing: 0;
       min-width: calc(var(--sidebar-col-width) + (var(--max-terms, 12) * var(--term-col-width)));
       table-layout: fixed;
+      zoom: 1;
+      transform-origin: top left;
+      transition: zoom 0.15s ease-out;
     }
 
     .schedule-matrix th,
@@ -685,7 +714,7 @@
       cursor: pointer;
       padding: 2px 4px;
       font-size: 0.7rem;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s ease;
     }
 
     .module-widget:hover .mod-edit-btn {
@@ -1613,10 +1642,35 @@
       font-size: 0.85rem;
     }
 
+    .type-a-zoom-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-size: 0.8rem;
+    }
+
+    .type-a-zoom-control input[type="range"] {
+      width: 100px;
+      accent-color: var(--primary-accent);
+      cursor: pointer;
+    }
+
+    .type-a-zoom-control #typeAZoomVal {
+      font-weight: 700;
+      width: 38px;
+      text-align: right;
+      color: var(--primary-accent);
+    }
+
     .type-a-table-container {
       overflow-x: auto;
       overflow-y: auto;
-      max-height: 52vh;
+      max-height: 55vh;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       background-color: var(--bg-card);
@@ -1627,6 +1681,9 @@
       border-collapse: separate;
       border-spacing: 0;
       font-size: 0.825rem;
+      zoom: 1;
+      transform-origin: top left;
+      transition: zoom 0.15s ease-out;
     }
 
     .type-a-snapshot-table th,
@@ -1832,9 +1889,141 @@
       color: var(--text-primary);
     }
 
-    .selective-course-meta {
-      font-size: 0.775rem;
-      color: var(--text-muted);
+    /* Print Styles for Type A Examination Schedule PDF Export */
+    @media screen {
+      .type-a-print-only {
+        display: none !important;
+      }
+    }
+
+    @media print {
+      @page {
+        size: landscape;
+        margin: 6mm;
+      }
+
+      body > *:not(.type-a-print-only) {
+        display: none !important;
+      }
+
+      .type-a-print-only {
+        display: block !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-family: system-ui, -apple-system, sans-serif !important;
+        font-size: 9.5px !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .type-a-print-only .pdf-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: flex-end !important;
+        margin-bottom: 8px !important;
+        border-bottom: 2px solid #334155 !important;
+        padding-bottom: 6px !important;
+      }
+
+      .type-a-print-only .pdf-title {
+        font-size: 15px !important;
+        font-weight: 800 !important;
+        color: #1e293b !important;
+      }
+
+      .type-a-print-only .pdf-subtitle {
+        font-size: 9px !important;
+        color: #64748b !important;
+      }
+
+      .type-a-print-only .pdf-stats-row {
+        display: flex !important;
+        gap: 10px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .type-a-print-only .pdf-stat-card {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 4px !important;
+        padding: 4px 8px !important;
+        flex: 1 !important;
+      }
+
+      .type-a-print-only .pdf-stat-label {
+        font-size: 7.5px !important;
+        font-weight: 700 !important;
+        color: #64748b !important;
+        text-transform: uppercase !important;
+      }
+
+      .type-a-print-only .pdf-stat-val {
+        font-size: 11px !important;
+        font-weight: 800 !important;
+        color: #4f46e5 !important;
+      }
+
+      .type-a-print-only table.pdf-table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+      }
+
+      .type-a-print-only th,
+      .type-a-print-only td {
+        border: 1px solid #94a3b8 !important;
+        padding: 3px 4px !important;
+        font-size: 8px !important;
+        text-align: center !important;
+        vertical-align: top !important;
+        word-break: break-word !important;
+      }
+
+      .type-a-print-only th {
+        background-color: #f1f5f9 !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+        padding: 4px 3px !important;
+      }
+
+      .type-a-print-only tr:nth-child(even) td {
+        background-color: #f8fafc !important;
+      }
+
+      .type-a-print-only .pdf-badge-stack {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 2px !important;
+      }
+
+      .type-a-print-only .pdf-badge {
+        padding: 2px 4px !important;
+        border-radius: 4px !important;
+        font-size: 7.5px !important;
+        font-weight: 700 !important;
+        word-break: break-word !important;
+        line-height: 1.2 !important;
+        display: block !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* Exact Pastel Color Schemes for PDF Badges */
+      .type-a-print-only .pdf-badge.tab-color-indigo { background-color: #e0e7ff !important; color: #3730a3 !important; border: 1px solid #c7d2fe !important; }
+      .type-a-print-only .pdf-badge.tab-color-emerald { background-color: #d1fae5 !important; color: #065f46 !important; border: 1px solid #a7f3d0 !important; }
+      .type-a-print-only .pdf-badge.tab-color-amber { background-color: #fef3c7 !important; color: #92400e !important; border: 1px solid #fde68a !important; }
+      .type-a-print-only .pdf-badge.tab-color-rose { background-color: #ffe4e6 !important; color: #9f1239 !important; border: 1px solid #fecdd3 !important; }
+      .type-a-print-only .pdf-badge.tab-color-purple { background-color: #f3e8ff !important; color: #6b21a8 !important; border: 1px solid #e9d5ff !important; }
+      .type-a-print-only .pdf-badge.tab-color-teal { background-color: #ccfbf1 !important; color: #115e59 !important; border: 1px solid #99f6e4 !important; }
+      .type-a-print-only .pdf-badge.tab-color-orange { background-color: #ffedd5 !important; color: #9a3412 !important; border: 1px solid #fed7aa !important; }
+      .type-a-print-only .pdf-badge.tab-color-violet { background-color: #ede9fe !important; color: #5b21b6 !important; border: 1px solid #ddd6fe !important; }
+    }
     }
   </style>
 </head>
@@ -1951,6 +2140,13 @@
             </svg>
             Reset Preset
           </button>
+
+          <div class="main-zoom-control">
+            <span style="font-weight: 600;">🔍 Table Zoom:</span>
+            <input type="range" id="mainTableZoomInput" min="40" max="100" value="100" step="5" title="Adjust Main Schedule Matrix Zoom Level (40% - 100%)">
+            <span id="mainTableZoomVal">100%</span>
+            <button type="button" id="mainTableZoomResetBtn" class="btn btn-sm btn-outline" style="padding: 2px 6px; font-size: 0.725rem;" title="Reset Zoom to 100%">Reset</button>
+          </div>
         </div>
 
         <div class="meta-legend">
@@ -2397,7 +2593,9 @@
 
         <div class="modal-footer">
           <button type="button" id="deleteModBtn" class="btn btn-danger"
-            style="margin-right: auto; display: none;">Delete Widget</button>
+            style="display: none;">Delete Widget</button>
+          <button type="button" id="duplicateModBtn" class="btn btn-outline"
+            style="margin-right: auto; display: none;">📋 Duplicate Widget</button>
           <button type="button" id="cancelModBtn" class="btn btn-outline">Cancel</button>
           <button type="submit" class="btn btn-primary">Save Module</button>
         </div>
@@ -2575,7 +2773,13 @@
               <option value="Elective">Elective</option>
             </select>
           </div>
-          <div style="display: flex; gap: 8px; align-items: center;">
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <div class="type-a-zoom-control">
+              <span style="font-weight: 600;">🔍 Table Zoom:</span>
+              <input type="range" id="typeAZoomInput" min="40" max="100" value="100" step="5" title="Adjust Table Zoom Level (40% - 100%)">
+              <span id="typeAZoomVal">100%</span>
+              <button type="button" id="typeAZoomResetBtn" class="btn btn-sm btn-outline" style="padding: 2px 6px; font-size: 0.725rem;" title="Reset Zoom to 100%">Reset</button>
+            </div>
             <button type="button" id="typeAExportCsvBtn" class="btn btn-sm btn-outline">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -2583,6 +2787,15 @@
                 <line x1="12" y1="15" x2="12" y2="3"></line>
               </svg>
               Export CSV
+            </button>
+            <button type="button" id="typeAExportPdfBtn" class="btn btn-sm btn-outline" title="Export Examination Schedule as Landscape PDF Snapshot">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              Export PDF
             </button>
           </div>
         </div>
@@ -2603,12 +2816,7 @@
       </div>
 
       <div class="modal-footer"
-        style="padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;">
-        <div
-          style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-muted); flex-wrap: wrap;"
-          id="typeALegendBar">
-          <!-- Dynamic course tab legend badges -->
-        </div>
+        style="padding: 12px 20px; display: flex; align-items: center; justify-content: flex-end;">
         <button type="button" id="closeTypeASnapshotFooterBtn" class="btn btn-outline">Close</button>
       </div>
     </div>
@@ -3426,9 +3634,18 @@
 
       // Helper: Get designated row key for a module based on user settings
       function getDesignatedRowKey(mod) {
+        if (!mod) return 'Type B';
         if (mod.type === 'Type A') return 'Type A';
         if (mod.type === 'Type B') return 'Type B';
-        return mod.category;
+
+        // For General / non-Exam assessment types:
+        if (mod.category === 'CDC') return 'CDC';
+        if (mod.category === 'Elective') return 'Elective';
+        if (mod.category === 'Life-skills') return 'Life-skills';
+        if (mod.category === 'Sports') return 'Sports';
+
+        // Foundation, Preparatory, Core, Specialisation, Internship-3M, Internship-6M with General type map to Type B row
+        return 'Type B';
       }
 
       // Calculate Total Hours (Theory + Practical)
@@ -3501,6 +3718,30 @@
         // 3. Grid Line Style Classes on Body
         document.body.classList.remove('grid-standard', 'grid-high-contrast', 'grid-subtle');
         document.body.classList.add(`grid-${plannerSettings.gridStyle}`);
+
+        // 4. Main Schedule Matrix Zoom Scale
+        updateMainTableZoom(plannerSettings.mainTableZoom || 100, false);
+      }
+
+      function updateMainTableZoom(val, save = true) {
+        const num = parseInt(val, 10) || 100;
+        const scale = num / 100;
+        const matrix = document.querySelector('.schedule-matrix');
+        if (matrix) {
+          matrix.style.zoom = scale;
+        }
+        const zoomVal = document.getElementById('mainTableZoomVal');
+        if (zoomVal) {
+          zoomVal.textContent = `${num}%`;
+        }
+        const zoomInput = document.getElementById('mainTableZoomInput');
+        if (zoomInput) {
+          zoomInput.value = num;
+        }
+        plannerSettings.mainTableZoom = num;
+        if (save) {
+          saveLocalState();
+        }
       }
 
       function loadPresetDefaults() {
@@ -3765,18 +4006,49 @@
         widget.addEventListener('dragstart', handleDragStart);
         widget.addEventListener('dragend', handleDragEnd);
 
-        // Edit button & double click listener
         const editBtn = widget.querySelector('.mod-edit-btn');
-        editBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openEditModal(mod.id);
-        });
+        if (editBtn) {
+          editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openEditModal(mod.id);
+          });
+        }
 
         widget.addEventListener('dblclick', () => {
           openEditModal(mod.id);
         });
 
         return widget;
+      }
+
+      // Duplicate Module in the same cell
+      function duplicateModule(modId) {
+        const sourceIndex = modules.findIndex(m => m.id === modId);
+        if (sourceIndex === -1) return;
+
+        const sourceMod = modules[sourceIndex];
+        const newId = 'm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+
+        const dupMod = {
+          id: newId,
+          code: sourceMod.code,
+          title: sourceMod.title,
+          category: sourceMod.category,
+          type: sourceMod.type,
+          credits: sourceMod.credits,
+          duration: sourceMod.duration,
+          theoryHours: sourceMod.theoryHours,
+          practicalHours: sourceMod.practicalHours,
+          totalHours: sourceMod.totalHours,
+          startTerm: sourceMod.startTerm
+        };
+
+        // Insert right next to source module in array
+        modules.splice(sourceIndex + 1, 0, dupMod);
+
+        renderMatrix();
+        renderCertAuditTable();
+        saveLocalState();
       }
 
       // Render Summary Rows (Calculations)
@@ -4520,6 +4792,8 @@
         document.getElementById('modPracticalHours').value = 20;
         document.getElementById('modCredits').value = 4;
         document.getElementById('deleteModBtn').style.display = 'none';
+        const dupBtn = document.getElementById('duplicateModBtn');
+        if (dupBtn) dupBtn.style.display = 'none';
 
         updateModalDurationOptions();
         document.getElementById('moduleModal').classList.remove('hidden');
@@ -4543,7 +4817,9 @@
         document.getElementById('modStartTerm').value = getValidStartTerm(mod.startTerm, mod.duration);
 
         updateModalDurationOptions();
-        document.getElementById('deleteModBtn').style.display = 'block';
+        document.getElementById('deleteModBtn').style.display = 'inline-flex';
+        const dupBtn = document.getElementById('duplicateModBtn');
+        if (dupBtn) dupBtn.style.display = 'inline-flex';
         document.getElementById('moduleModal').classList.remove('hidden');
       }
 
@@ -4723,13 +4999,6 @@
         document.getElementById('typeAStatEarliestDate').textContent = earliestCol ? earliestCol.label : '-';
         document.getElementById('typeAStatTotalOfferings').textContent = totalOfferingsCount;
 
-        const legendBar = document.getElementById('typeALegendBar');
-        if (legendBar) {
-          legendBar.innerHTML = '<span style="font-weight: 700;">Course Tabs:</span> ' + coursesData.map(c =>
-            `<span class="type-a-course-badge ${c.tabColorClass}">${escapeHtml(c.courseName)}</span>`
-          ).join(' ');
-        }
-
         const headerRow = document.getElementById('typeATableHeaderRow');
         if (headerRow) {
           let headersHtml = `
@@ -4747,7 +5016,9 @@
 
         typeASnapshotCache = {
           timelineColumns: timelineColumns,
-          consolidatedModules: consolidatedModules
+          consolidatedModules: consolidatedModules,
+          coursesData: coursesData,
+          totalOfferingsCount: totalOfferingsCount
         };
 
         applyTypeASnapshotFilters();
@@ -4857,6 +5128,118 @@
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       }
 
+      // Export Type A Examination Schedule as Landscape PDF
+      function exportTypeAPdf() {
+        if (!typeASnapshotCache) {
+          renderTypeASnapshotTable();
+        }
+        if (!typeASnapshotCache) {
+          alert('Unable to load examination schedule data for PDF export.');
+          return;
+        }
+
+        const { consolidatedModules, timelineColumns, coursesData, totalOfferingsCount } = typeASnapshotCache;
+        const searchInput = document.getElementById('typeASearchInput');
+        const categoryFilter = document.getElementById('typeACategoryFilter');
+
+        const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+        const selectedCat = categoryFilter ? categoryFilter.value : 'ALL';
+
+        const filteredModules = consolidatedModules.filter(mod => {
+          const matchQuery = !query ||
+            (mod.code && mod.code.toLowerCase().includes(query)) ||
+            (mod.title && mod.title.toLowerCase().includes(query));
+          const matchCat = selectedCat === 'ALL' || mod.category === selectedCat;
+          return matchQuery && matchCat;
+        });
+
+        if (filteredModules.length === 0) {
+          alert('No modules match your current filter to export.');
+          return;
+        }
+
+        // Clean up any existing print section
+        let oldPrint = document.getElementById('typeAPrintSection');
+        if (oldPrint) oldPrint.remove();
+
+        const timestampStr = new Date().toLocaleString();
+
+        const numTimelineCols = timelineColumns.length;
+        const timelineColWidth = (65 / Math.max(1, numTimelineCols)).toFixed(2);
+
+        let tableHeaderHtml = `
+          <tr>
+            <th style="width: 7%;">Module Code</th>
+            <th style="width: 13%;">Module Title</th>
+            <th style="width: 7%;">Category</th>
+            <th style="width: 3.5%;">Cr</th>
+            <th style="width: 4.5%;">Hours</th>
+            ${timelineColumns.map(c => `<th style="width: ${timelineColWidth}%;">${escapeHtml(c.label)}</th>`).join('')}
+          </tr>
+        `;
+
+        let tableBodyHtml = filteredModules.map(mod => {
+          const termCells = timelineColumns.map(col => {
+            const matches = mod.occurrences.filter(occ => occ.periodKey === col.key);
+            if (matches.length === 0) {
+              return `<td style="color: #cbd5e1;">-</td>`;
+            }
+            const badgesHtml = matches.map(occ => {
+              const label = occ.duration === 6
+                ? `${escapeHtml(occ.courseName)} (T${occ.startTerm}-T${occ.completionTerm} Exam)`
+                : `${escapeHtml(occ.courseName)} (T${occ.completionTerm} Exam)`;
+              return `<div class="pdf-badge ${occ.tabColorClass}">${label}</div>`;
+            }).join('');
+            return `<td><div class="pdf-badge-stack">${badgesHtml}</div></td>`;
+          }).join('');
+
+          return `
+            <tr>
+              <td><strong>${escapeHtml(mod.code)}</strong></td>
+              <td style="text-align: left; font-weight: 600;">${escapeHtml(mod.title)}</td>
+              <td>${escapeHtml(mod.category)}</td>
+              <td style="font-weight: 700;">${mod.credits}</td>
+              <td style="color: #64748b;">${mod.totalHours}h</td>
+              ${termCells}
+            </tr>
+          `;
+        }).join('');
+
+        const printSection = document.createElement('div');
+        printSection.id = 'typeAPrintSection';
+        printSection.className = 'type-a-print-only';
+
+        printSection.innerHTML = `
+          <div class="pdf-header">
+            <div>
+              <div class="pdf-title">Overall Examination (Type A) Modules Schedule Snapshot</div>
+              <div class="pdf-subtitle">Consolidated View Across All Course Tabs | Generated: ${timestampStr}</div>
+            </div>
+          </div>
+          <div class="pdf-stats-row">
+            <div class="pdf-stat-card"><div class="pdf-stat-label">Unique Type A Modules</div><div class="pdf-stat-val">${filteredModules.length}</div></div>
+            <div class="pdf-stat-card"><div class="pdf-stat-label">Course Tabs Included</div><div class="pdf-stat-val">${coursesData.length}</div></div>
+            <div class="pdf-stat-card"><div class="pdf-stat-label">Earliest Course Term</div><div class="pdf-stat-val">${timelineColumns[0] ? timelineColumns[0].label : '-'}</div></div>
+            <div class="pdf-stat-card"><div class="pdf-stat-label">Total Exam Module Instances</div><div class="pdf-stat-val">${totalOfferingsCount}</div></div>
+          </div>
+          <table class="pdf-table">
+            <thead>${tableHeaderHtml}</thead>
+            <tbody>${tableBodyHtml}</tbody>
+          </table>
+        `;
+
+        document.body.appendChild(printSection);
+
+        // Directly invoke native print dialog (bypasses all popup blockers)
+        window.print();
+
+        setTimeout(() => {
+          if (printSection && printSection.parentNode) {
+            printSection.remove();
+          }
+        }, 1000);
+      }
+
       // Setup Event Listeners
       function setupEventListeners() {
         // Type A Overall Snapshot Modal Actions
@@ -4867,6 +5250,39 @@
         document.getElementById('typeASearchInput').addEventListener('input', applyTypeASnapshotFilters);
         document.getElementById('typeACategoryFilter').addEventListener('change', applyTypeASnapshotFilters);
         document.getElementById('typeAExportCsvBtn').addEventListener('click', exportTypeACsv);
+        document.getElementById('typeAExportPdfBtn').addEventListener('click', exportTypeAPdf);
+
+        // Zoom Slider Handler for Type A Snapshot Table
+        const typeAZoomInput = document.getElementById('typeAZoomInput');
+        const typeAZoomVal = document.getElementById('typeAZoomVal');
+        const typeAZoomResetBtn = document.getElementById('typeAZoomResetBtn');
+        const typeATable = document.getElementById('typeASnapshotTable');
+
+        function updateTypeAZoom(val) {
+          const num = parseInt(val, 10) || 100;
+          const scale = num / 100;
+          if (typeATable) {
+            typeATable.style.zoom = scale;
+          }
+          if (typeAZoomVal) {
+            typeAZoomVal.textContent = `${num}%`;
+          }
+          if (typeAZoomInput) {
+            typeAZoomInput.value = num;
+          }
+        }
+
+        if (typeAZoomInput) {
+          typeAZoomInput.addEventListener('input', (e) => {
+            updateTypeAZoom(e.target.value);
+          });
+        }
+
+        if (typeAZoomResetBtn) {
+          typeAZoomResetBtn.addEventListener('click', () => {
+            updateTypeAZoom(100);
+          });
+        }
 
         if (typeAModal) {
           typeAModal.addEventListener('click', (e) => {
@@ -4890,6 +5306,22 @@
         // Header Toolbar Actions
         document.getElementById('addModuleBtn').addEventListener('click', openAddModal);
         document.getElementById('plannerSettingsBtn').addEventListener('click', openSettingsModal);
+
+        // Main Schedule Matrix Zoom Control Listeners
+        const mainZoomInput = document.getElementById('mainTableZoomInput');
+        const mainZoomResetBtn = document.getElementById('mainTableZoomResetBtn');
+
+        if (mainZoomInput) {
+          mainZoomInput.addEventListener('input', (e) => {
+            updateMainTableZoom(e.target.value, true);
+          });
+        }
+
+        if (mainZoomResetBtn) {
+          mainZoomResetBtn.addEventListener('click', () => {
+            updateMainTableZoom(100, true);
+          });
+        }
 
         document.getElementById('resetScheduleBtn').addEventListener('click', () => {
           if (confirm('Reset active schedule tab to default Software Development preset? Custom changes in this tab will be overwritten.')) {
@@ -5055,6 +5487,12 @@
         document.getElementById('cancelModBtn').addEventListener('click', closeModal);
         document.getElementById('moduleForm').addEventListener('submit', handleFormSubmit);
         document.getElementById('deleteModBtn').addEventListener('click', deleteCurrentModule);
+        document.getElementById('duplicateModBtn').addEventListener('click', () => {
+          if (currentEditingModuleId) {
+            duplicateModule(currentEditingModuleId);
+            closeModal();
+          }
+        });
 
         // Setup Click-and-Drag Mouse Panning
         setupPanAndScroll();
