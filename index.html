@@ -624,7 +624,8 @@
       background-color: var(--sports-bg);
     }
 
-    .module-widget[data-category="Internship-3M"] {
+    .module-widget[data-category="Internship-3M"],
+    .module-widget[data-category="Internship-3M-Core"] {
       border-left: 4px solid var(--internship-3m-color);
       color: var(--internship-3m-color);
       background-color: var(--internship-3m-bg);
@@ -2519,6 +2520,7 @@
               <option value="Preparatory">Preparatory Modules (Accelerated Pathway)</option>
               <option value="Core">Cluster Core Modules</option>
               <option value="Specialisation">Specialisation Modules</option>
+              <option value="Internship-3M-Core">3 Month Internship (Cluster Core)</option>
               <option value="Internship-3M">3 Month Internship (Specialisation)</option>
               <option value="Internship-6M">6 Month Internship (Specialisation)</option>
               <option value="CDC">Cross Disciplinary Core (CDC)</option>
@@ -2768,6 +2770,7 @@
               <option value="ALL">All Categories</option>
               <option value="Foundation">Foundation</option>
               <option value="Core">Core</option>
+              <option value="Internship-3M-Core">3M Internship (Core)</option>
               <option value="Specialisation">Specialisation</option>
               <option value="CDC">CDC</option>
               <option value="Elective">Elective</option>
@@ -3278,7 +3281,7 @@
             } else {
               t = (t % 2 === 0) ? 2 : 1;
             }
-          } else if (m.category === 'Core') {
+          } else if (m.category === 'Core' || m.category === 'Internship-3M-Core') {
             t = (t <= 6) ? 4 : 5;
           } else if (m.category === 'Specialisation' || m.category === 'Internship-3M' || m.category === 'Internship-6M') {
             t = Math.min(9, Math.max(6, t - 1));
@@ -3966,11 +3969,11 @@
         if (durationOpt !== 'none') {
           let durationText = '';
           if (durationOpt === 'simplified') {
-            if (mod.category === 'Internship-3M') durationText = '3M Intern';
+            if (mod.category === 'Internship-3M' || mod.category === 'Internship-3M-Core') durationText = '3M Intern';
             else if (mod.category === 'Internship-6M') durationText = '6M Intern';
             else durationText = mod.duration === 6 ? '6 Mths' : '3 Mths';
           } else {
-            if (mod.category === 'Internship-3M') durationText = '3M (10 Wks)';
+            if (mod.category === 'Internship-3M' || mod.category === 'Internship-3M-Core') durationText = '3M (10 Wks)';
             else if (mod.category === 'Internship-6M') durationText = '6M (20 Wks)';
             else durationText = mod.duration === 6 ? '6 Mths (2 Terms • 20 Wks)' : '3 Mths (1 Term • 10 Wks)';
           }
@@ -4205,6 +4208,9 @@
             if (categoryKey === 'Specialisation') {
               return m.category === 'Specialisation' || m.category === 'Internship-3M' || m.category === 'Internship-6M';
             }
+            if (categoryKey === 'Core') {
+              return m.category === 'Core' || m.category === 'Internship-3M-Core';
+            }
             return m.category === categoryKey;
           })
           .reduce((sum, m) => sum + (Number(m.credits) || 0), 0);
@@ -4221,7 +4227,7 @@
       function getScheduledInternshipsUpToTerm(maxTerm) {
         const activeInternships = modules.filter(m => {
           if (m.startTerm > maxTerm) return false;
-          const is3M = m.category === 'Internship-3M' || (m.duration === 3 && m.title.toLowerCase().includes('internship'));
+          const is3M = m.category === 'Internship-3M' || m.category === 'Internship-3M-Core' || (m.duration === 3 && m.title.toLowerCase().includes('internship'));
           const is6M = m.category === 'Internship-6M' || (m.duration === 6 && m.title.toLowerCase().includes('internship'));
           return is3M || is6M;
         });
@@ -4728,7 +4734,7 @@
         const cat = document.getElementById('modCategory').value;
         const durationSelect = document.getElementById('modDuration');
 
-        if (cat === 'Internship-3M') {
+        if (cat === 'Internship-3M' || cat === 'Internship-3M-Core') {
           durationSelect.value = '3';
         } else if (cat === 'Internship-6M') {
           durationSelect.value = '6';
